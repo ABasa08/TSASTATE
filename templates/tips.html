@@ -1,0 +1,27 @@
+<!-- templates/tips.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AgriNova - Eco Tips</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="bg-yellow-50 text-gray-900">
+
+  {% include 'navbar.html' %}
+
+  <section class="max-w-4xl mx-auto py-12 px-4">
+    <h2 class="text-3xl font-bold text-yellow-600 mb-6">♻️ Eco Tips</h2>
+
+    <div id="tips-carousel" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Flip cards will be dynamically added by JS -->
+    </div>
+
+    <button id="view-tips-data" class="mt-6 underline text-yellow-600">📂 View All Data</button>
+    <div id="tips-history" class="mt-4 hidden"></div>
+  </section>
+
+  <script src="/static/main.js"></script>
+</body>
+</html>

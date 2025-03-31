@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Planner – AgriNova</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="bg-green-50 text-gray-900 font-sans">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+      <h1 class="text-2xl font-bold text-green-700">🌿 AgriNova</h1>
+      <ul class="flex gap-5 font-medium text-sm">
+        <li><a href="/" class="hover:text-green-600">Home</a></li>
+        <li><a href="/planner" class="text-green-600 font-semibold">Planner</a></li>
+        <li><a href="/water" class="hover:text-green-600">Water</a></li>
+        <li><a href="/dashboard" class="hover:text-green-600">Dashboard</a></li>
+        <li><a href="/tips" class="hover:text-green-600">Tips</a></li>
+        <li><a href="/reports" class="hover:text-green-600">Reports</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Planner Form -->
+  <section class="max-w-4xl mx-auto bg-white p-8 my-8 rounded-lg shadow-lg border border-gray-300">
+    <h2 class="text-2xl font-bold text-green-800 mb-6 text-center">🌾 Crop Efficiency Planner</h2>
+
+    <form id="planner-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Crop Dropdown -->
+      <div>
+        <label for="crop" class="block">Crop Type</label>
+        <select id="crop" class="w-full">
+          <option disabled selected value="">Select a crop</option>
+          <option value="Corn">Corn</option>
+          <option value="Wheat">Wheat</option>
+          <option value="Rice">Rice</option>
+          <option value="Tomato">Tomato</option>
+          <option value="Potato">Potato</option>
+          <option value="Soybean">Soybean</option>
+          <option value="Cotton">Cotton</option>
+          <option value="Sugarcane">Sugarcane</option>
+          <option value="Lettuce">Lettuce</option>
+          <option value="Onion">Onion</option>
+        </select>
+      </div>
+
+      <!-- Soil Dropdown -->
+      <div>
+        <label for="soil" class="block">Soil Type</label>
+        <select id="soil" class="w-full">
+          <option disabled selected value="">Select soil type</option>
+          <option value="Loamy">Loamy</option>
+          <option value="Sandy">Sandy</option>
+          <option value="Clay">Clay</option>
+          <option value="Silty">Silty</option>
+          <option value="Peaty">Peaty</option>
+          <option value="Chalky">Chalky</option>
+        </select>
+      </div>
+
+      <!-- Area & Past Yield -->
+      <div>
+        <label for="area" class="block">Farm Area (acres)</label>
+        <input type="number" id="area" class="w-full" placeholder="e.g. 2" />
+      </div>
+      <div>
+        <label for="yield" class="block">Past Yield (tons)</label>
+        <input type="number" id="yield" class="w-full" placeholder="e.g. 3.5" />
+      </div>
+
+      <!-- Submit Button -->
+      <div class="md:col-span-2 text-center mt-4">
+        <button type="button" id="predictBtn" class="btn btn-success">🔍 Predict & Suggest</button>
+      </div>
+    </form>
+
+    <!-- Output Section -->
+    <div id="planner-output" class="mt-10 hidden">
+      <h3 class="text-xl font-bold mb-2">✅ Results</h3>
+      <p id="yield-result" class="mb-1"></p>
+      <p id="companion-result" class="mb-3"></p>
+
+      <div class="mt-6 flex flex-wrap gap-4">
+        <button id="viewDataBtn" class="btn btn-warning">📂 View All Crop Data</button>
+        <button id="showGraph" class="btn btn-success">📈 View Yield Graph</button>
+      </div>
+
+      <canvas id="yield-chart" width="400" height="200" class="mt-6"></canvas>
+    </div>
+  </section>
+
+  <!-- Blockchain Viewer -->
+  <section id="all-data-modal" class="hidden max-w-4xl mx-auto mt-10 p-6 bg-white border border-green-300 rounded shadow">
+    <h3 class="text-xl font-bold text-green-800 mb-2">📜 Past Crop Plans</h3>
+    <ul id="blockchain-data" class="list-disc list-inside text-gray-700 text-sm space-y-1"></ul>
+  </section>
+
+  <script src="{{ url_for('static', filename='planner.js') }}"></script>
+</body>
+</html>
