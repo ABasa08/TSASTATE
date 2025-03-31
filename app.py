@@ -113,7 +113,7 @@ def view_chain():
 def export_pdf():
     data = request.json
     html = f"""
-    <h2>AgriNova – Crop Planner Report</h2>
+    <h2>TSA – Crop Planner Report</h2>
     <p><strong>Crop:</strong> {data['crop']}</p>
     <p><strong>Soil:</strong> {data['soil']}</p>
     <p><strong>Area:</strong> {data['area']} acres</p>
