@@ -1,32 +1,193 @@
 [
   {
     "index": 0,
-    "timestamp": 1743385924.8109481,
+    "timestamp": 1743454230.797278,
     "feature": "Genesis",
     "data": "Initial block",
     "prev_hash": "0",
-    "hash": "6a1d3c667e2d7e46528322346010d6c7c066c122ced5dd28d615522240979808"
+    "hash": "a80babfd43216bcf79516628ad1e265ce19ac282a9671fc72fd4d5886ea0cdb4"
   },
   {
     "index": 1,
-    "timestamp": 1743385996.0391722,
+    "timestamp": 1743454264.061397,
+    "feature": "Dashboard Accessed",
+    "data": {
+      "ecoScore": "Silver",
+      "waterSaved": 120,
+      "soilHealth": 8.5,
+      "yieldEfficiency": 92,
+      "labels": [
+        "Week 1",
+        "Week 2",
+        "Week 3"
+      ],
+      "history": [
+        60,
+        80,
+        92
+      ]
+    },
+    "prev_hash": "a80babfd43216bcf79516628ad1e265ce19ac282a9671fc72fd4d5886ea0cdb4",
+    "hash": "c4ffb68b2971535c02820ad2573d61c3b56b40b8e9fcd51ed25ade0945776487"
+  },
+  {
+    "index": 2,
+    "timestamp": 1743454391.96206,
+    "feature": "Water Simulation",
+    "data": {
+      "input": {
+        "irrigation": "Drip",
+        "soil": "Peaty",
+        "crop": "Sugarcane",
+        "area": 500,
+        "unit": "acres",
+        "location": "Chicago"
+      },
+      "output": {
+        "used_liters": 450000.0,
+        "used_gallons": 118877.4,
+        "saved_liters": 300000.0,
+        "saved_gallons": 79251.6,
+        "score": 40.0,
+        "badge": "\ud83d\udfe5 Poor",
+        "weather": {
+          "temp": 6.14,
+          "humidity": 67,
+          "desc": "Broken Clouds",
+          "rain": false
+        },
+        "tip": "Use Drip for Sugarcane on Peaty soil. ",
+        "eco_tip": "\ud83c\udf3f Eco Tip: Use rainwater harvesting in wet seasons to save 50%.",
+        "rainAlert": false,
+        "match": "Okay"
+      }
+    },
+    "prev_hash": "c4ffb68b2971535c02820ad2573d61c3b56b40b8e9fcd51ed25ade0945776487",
+    "hash": "f74f31ee6e7a8b4f778b78166ea34f255683bdbb6175f3819ea0b1197cedad2e"
+  },
+  {
+    "index": 3,
+    "timestamp": 1743454725.154027,
     "feature": "Crop Planner",
     "data": {
       "input": {
-        "crop": "Tomato",
+        "crop": "Rice",
         "soil": "Clay",
-        "area": "3",
-        "yield": "2.11"
+        "area": "23",
+        "yield": 23
       },
       "output": {
-        "yield": "2.32 tons",
+        "yield": "25.3 tons",
         "companions": [
           "Beans",
           "Sunflowers"
         ]
       }
     },
-    "prev_hash": "6a1d3c667e2d7e46528322346010d6c7c066c122ced5dd28d615522240979808",
-    "hash": "6d3512231e575e1344bbe8ee327a16f405a593bc1e8c59243a51ffc55628d962"
+    "prev_hash": "f74f31ee6e7a8b4f778b78166ea34f255683bdbb6175f3819ea0b1197cedad2e",
+    "hash": "695ff7ad6c69d1896d81a5b429b677a12c2f2c3f1d448f3c4b582189fd915a8c"
+  },
+  {
+    "index": 4,
+    "timestamp": 1743454761.084631,
+    "feature": "Dashboard Accessed",
+    "data": {
+      "ecoScore": "Silver",
+      "waterSaved": 120,
+      "soilHealth": 8.5,
+      "yieldEfficiency": 92,
+      "labels": [
+        "Week 1",
+        "Week 2",
+        "Week 3"
+      ],
+      "history": [
+        60,
+        80,
+        92
+      ]
+    },
+    "prev_hash": "695ff7ad6c69d1896d81a5b429b677a12c2f2c3f1d448f3c4b582189fd915a8c",
+    "hash": "f3b67c8961b847396cd44809acadff5b7570ae49e036eda3308df3b57f6ee289"
+  },
+  {
+    "index": 5,
+    "timestamp": 1743456395.44606,
+    "feature": "Crop Planner",
+    "data": {
+      "input": {
+        "crop": "Tomato",
+        "soil": "Clay",
+        "area": "2900",
+        "yield": 2.5
+      },
+      "output": {
+        "yield": "2.75 tons",
+        "companions": [
+          "Beans",
+          "Sunflowers"
+        ]
+      }
+    },
+    "prev_hash": "f3b67c8961b847396cd44809acadff5b7570ae49e036eda3308df3b57f6ee289",
+    "hash": "86d9cbdb82a1731b51c91b349ad573ea70f5799b8a1d2ec9ebc88bf2ad2828a5"
+  },
+  {
+    "index": 6,
+    "timestamp": 1743456441.816107,
+    "feature": "Water Simulation",
+    "data": {
+      "input": {
+        "irrigation": "Flood",
+        "soil": "Silty",
+        "crop": "Cucumber",
+        "area": 2000,
+        "unit": "acres",
+        "location": "Seattle"
+      },
+      "output": {
+        "used_liters": 490000.0,
+        "used_gallons": 129444.3,
+        "saved_liters": 210000.0,
+        "saved_gallons": 55476.1,
+        "score": 30.0,
+        "badge": "\ud83d\udfe5 Poor",
+        "weather": {
+          "temp": 10.91,
+          "humidity": 71,
+          "desc": "Light Rain",
+          "rain": true
+        },
+        "tip": "Use Flood for Cucumber on Silty soil. Rain expected \u2013 reduce watering.",
+        "eco_tip": "\ud83c\udf3f Eco Tip: Use rainwater harvesting in wet seasons to save 50%.",
+        "rainAlert": true,
+        "match": "Okay"
+      }
+    },
+    "prev_hash": "86d9cbdb82a1731b51c91b349ad573ea70f5799b8a1d2ec9ebc88bf2ad2828a5",
+    "hash": "18f7784d175c8be43e367e6bf78ca54e6583007b876894a94f02f3cdac3fb388"
+  },
+  {
+    "index": 7,
+    "timestamp": 1743456474.1799302,
+    "feature": "Dashboard Accessed",
+    "data": {
+      "ecoScore": "Silver",
+      "waterSaved": 120,
+      "soilHealth": 8.5,
+      "yieldEfficiency": 92,
+      "labels": [
+        "Week 1",
+        "Week 2",
+        "Week 3"
+      ],
+      "history": [
+        60,
+        80,
+        92
+      ]
+    },
+    "prev_hash": "18f7784d175c8be43e367e6bf78ca54e6583007b876894a94f02f3cdac3fb388",
+    "hash": "3bb083a8179dcd674f421c8ede4bdbccf9f86d8f5e275858066a0aa7befa32d8"
   }
 ]

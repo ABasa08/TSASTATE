@@ -2,99 +2,138 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Water Simulator – TSA</title>
+  <title>Water Management – TSA</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='water.css') }}">
 </head>
-<body class="bg-green-50 text-gray-900 font-sans">
-  <!-- Navbar (unchanged) -->
+<body class="bg-blue-50 text-gray-800 font-sans">
+
+  <!-- Navbar -->
   <nav class="bg-white shadow sticky top-0 z-50">
     <div class="container mx-auto flex justify-between items-center py-4 px-6">
-      <h1 class="text-2xl font-bold text-green-700">🌿 TSA</h1>
+      <h1 class="text-2xl font-bold text-blue-700">💦 TSA</h1>
       <ul class="flex gap-5 font-medium text-sm">
-        <li><a href="/" class="hover:text-green-600">Home</a></li>
-        <li><a href="/planner" class="hover:text-green-600">Planner</a></li>
-        <li><a href="/water" class="text-green-600 font-semibold">Water</a></li>
-        <li><a href="/dashboard" class="hover:text-green-600">Dashboard</a></li>
-        <li><a href="/tips" class="hover:text-green-600">Tips</a></li>
-        <li><a href="/reports" class="hover:text-green-600">Reports</a></li>
+        <li><a href="/" class="hover:text-blue-600">Home</a></li>
+        <li><a href="/planner" class="hover:text-blue-600">Planner</a></li>
+        <li><a href="/water" class="text-blue-600 font-semibold">Water</a></li>
+        <li><a href="/dashboard" class="hover:text-blue-600">Dashboard</a></li>
+        <li><a href="/tips" class="hover:text-blue-600">Tips</a></li>
+        <li><a href="/reports" class="hover:text-blue-600">Reports</a></li>
       </ul>
     </div>   
   </nav>
 
-  <!-- Water Simulator Section -->
-  <section class="max-w-4xl mx-auto bg-white p-8 my-8 rounded-lg shadow-lg border border-gray-300">
-    <h2 class="text-2xl font-bold text-green-800 mb-6 text-center">💧 Water Management Tool</h2>
+  <!-- Water Tool -->
+  <section class="max-w-6xl mx-auto p-8 mt-6 bg-white rounded-xl shadow-xl border border-blue-200">
+    <h2 class="text-3xl font-bold text-center text-blue-800 mb-6">💧 Smart Water Management Tool</h2>
 
-    <form id="water-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Input Form -->
+    <form id="water-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- Irrigation Method -->
       <div>
-        <label for="irrigation" class="block text-lg font-semibold">Irrigation Method</label>
-        <select id="irrigation" class="w-full p-2 border rounded">
-          <option value="" disabled selected>Select irrigation method</option>
-          <option value="Drip">Drip Irrigation</option>
-          <option value="Sprinkler">Sprinkler</option>
-          <option value="Flood">Flood</option>
+        <label for="irrigation" class="font-semibold">💧 Irrigation Method</label>
+        <select id="irrigation" class="w-full border p-2 rounded bg-blue-50" title="Choose water delivery method">
+          <option disabled selected value="">Select Method</option>
+          <option value="Drip" title="Precise and efficient">Drip</option>
+          <option value="Sprinkler" title="Moderate efficiency">Sprinkler</option>
+          <option value="Flood" title="High water loss">Flood</option>
         </select>
       </div>
 
       <!-- Soil Type -->
       <div>
-        <label for="soil" class="block text-lg font-semibold">Soil Type</label>
-        <select id="soil" class="w-full p-2 border rounded">
-          <option value="" disabled selected>Select soil type</option>
-          <option value="Loamy">Loamy</option>
-          <option value="Sandy">Sandy</option>
-          <option value="Clay">Clay</option>
-          <option value="Silty">Silty</option>
-          <option value="Peaty">Peaty</option>
-          <option value="Chalky">Chalky</option>
+        <label for="soil" class="font-semibold">🧱 Soil Type</label>
+        <select id="soil" class="w-full border p-2 rounded bg-blue-50">
+          <option disabled selected value="">Select Soil</option>
+          <option value="Loamy" title="Balanced water retention">Loamy</option>
+          <option value="Clay" title="Holds water but can compact">Clay</option>
+          <option value="Sandy" title="Drains fast, low retention">Sandy</option>
+          <option value="Silty" title="Smooth, holds nutrients">Silty</option>
+          <option value="Peaty" title="Water-rich and acidic">Peaty</option>
+          <option value="Chalky" title="Poor retention, alkaline">Chalky</option>
         </select>
       </div>
 
       <!-- Crop Type -->
       <div>
-        <label for="crop" class="block text-lg font-semibold">Crop Type</label>
-        <select id="crop" class="w-full p-2 border rounded">
-          <option value="" disabled selected>Select crop</option>
+        <label for="crop" class="font-semibold">🌾 Crop Type</label>
+        <select id="crop" class="w-full border p-2 rounded bg-blue-50">
+          <option disabled selected value="">Select Crop</option>
           <option value="Wheat">Wheat</option>
           <option value="Rice">Rice</option>
           <option value="Corn">Corn</option>
           <option value="Tomato">Tomato</option>
+          <option value="Cucumber">Cucumber</option>
+          <option value="Sugarcane">Sugarcane</option>
+          <option value="Lettuce">Lettuce</option>
+          <option value="Carrot">Carrot</option>
+          <option value="Banana">Banana</option>
         </select>
       </div>
 
-      <!-- Farm Size -->
+      <!-- Farm Area -->
       <div>
-        <label for="farmSize" class="block text-lg font-semibold">Farm Size (acres)</label>
-        <input type="number" id="farmSize" min="1" placeholder="e.g., 10" class="w-full p-2 border rounded" />
+        <label for="area" class="font-semibold">📐 Farm Area</label>
+        <div class="flex gap-2 items-center">
+          <input type="number" id="area" class="w-full border p-2 rounded bg-blue-50" placeholder="e.g., 10" />
+          <select id="unit" class="border p-2 rounded bg-blue-50">
+            <option value="acres">Acres</option>
+            <option value="hectares">Hectares</option>
+          </select>
+        </div>
       </div>
 
-      <!-- Water Usage Slider -->
-      <div class="md:col-span-2">
-        <label for="waterSlider" class="block text-lg font-semibold">Adjust Water Usage (liters/acre)</label>
-        <input type="range" id="waterSlider" min="50" max="500" value="100" class="w-full" />
-        <span id="waterValue" class="text-sm">100 liters/acre</span>
+      <!-- Location -->
+      <div>
+        <label for="location" class="font-semibold">📍 Location (City)</label>
+        <input type="text" id="location" class="w-full border p-2 rounded bg-blue-50" placeholder="e.g., Seattle" />
       </div>
 
       <!-- Simulate Button -->
-      <div class="md:col-span-2 text-center mt-4">
-        <button type="button" id="simulateBtn" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">🔍 Simulate</button>
+      <div class="col-span-full text-center mt-4">
+        <button type="button" id="simulateBtn" class="bg-blue-600 text-white font-bold px-8 py-3 rounded-full shadow hover:bg-blue-700 transition">
+          🔍 Simulate Water Usage
+        </button>
       </div>
     </form>
 
-    <!-- Output Section -->
-    <div id="water-output" class="mt-10 hidden">
-      <h3 class="text-xl font-bold text-green-800 mb-4">✅ Your Water Results</h3>
-      <p id="water-used" class="mb-3 text-lg"></p>
-      <p id="water-saved" class="mb-3 text-lg"></p>
-      <p id="water-saving-tips" class="mb-3 text-lg"></p>
-      <button id="viewDataBtn" class="text-sm text-green-600 underline">📜 View Past Simulations</button>
+    <!-- Output -->
+    <div id="results" class="hidden mt-10 space-y-6">
+      <!-- Weather -->
+      <div id="weather-info" class="bg-blue-50 border border-blue-200 p-4 rounded-xl shadow">
+        <h3 class="text-lg font-semibold text-blue-800">🌦️ Weather Forecast</h3>
+        <p id="weather-summary" class="text-sm mt-1"></p>
+        <p id="rain-alert" class="text-sm mt-1 font-semibold text-red-600"></p>
+      </div>
 
-      <div class="mt-6">
-        <canvas id="water-chart" width="400" height="200"></canvas>
+      <!-- Simulation Results -->
+      <div class="bg-white border border-gray-200 p-4 rounded-xl shadow space-y-2">
+        <h3 class="text-lg font-bold text-blue-800">✅ Simulation Results</h3>
+        <p id="water-used"></p>
+        <p id="water-saved"></p>
+        <p id="conservation-score"></p>
+        <p id="badge"></p>
+        <p id="soil-crop-match"></p>
+        <p id="smart-tip" class="text-green-700 font-semibold whitespace-pre-line"></p>
+        <button id="exportBtn" class="bg-green-600 text-white mt-2 px-4 py-2 rounded hover:bg-green-700 transition">📄 Export Report</button>
+      </div>
+
+      <!-- Charts -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white p-4 border rounded shadow">
+          <canvas id="barChart"></canvas>
+        </div>
+        <div class="bg-white p-4 border rounded shadow">
+          <canvas id="donutChart"></canvas>
+        </div>
+      </div>
+
+      <!-- View Logs -->
+      <div class="text-center mt-6">
+        <button id="viewLogsBtn" class="text-blue-600 underline text-sm">📂 View Past Simulations</button>
+        <ul id="log-list" class="mt-2 space-y-1 text-sm text-gray-700"></ul>
       </div>
     </div>
   </section>

@@ -1,16 +1,30 @@
-<!-- templates/dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>TSA - Dashboard</title>
+  <meta charset="UTF-8" />
+  <title>Planner – TSA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="/static/style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='planner.css') }}">
 </head>
-<body class="bg-white text-gray-900">
 
-  {% include 'navbar.html' %}
+<body class="bg-green-50 text-gray-900 font-sans">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+      <h1 class="text-2xl font-bold text-green-700">🌿 TSA</h1>
+      <ul class="flex gap-5 font-medium text-sm">
+        <li><a href="/" class="hover:text-green-600">Home</a></li>
+        <li><a href="/planner" class="text-green-600 font-semibold">Planner</a></li>
+        <li><a href="/water" class="hover:text-green-600">Water</a></li>
+        <li><a href="/dashboard" class="hover:text-green-600">Dashboard</a></li>
+        <li><a href="/tips" class="hover:text-green-600">Tips</a></li>
+        <li><a href="/reports" class="hover:text-green-600">Reports</a></li>
+      </ul>
+    </div>
+  </nav>
 
   <section class="max-w-4xl mx-auto py-12 px-4">
     <h2 class="text-3xl font-bold text-green-700 mb-6">📊 Sustainability Dashboard</h2>

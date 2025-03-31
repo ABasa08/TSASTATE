@@ -1,114 +1,140 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const simulateBtn = document.getElementById("simulateBtn");
-    const waterSlider = document.getElementById("waterSlider");
-    const waterValue = document.getElementById("waterValue");
-    let chartInstance = null;
-  
-    // Update slider value display
-    waterSlider.addEventListener("input", () => {
-      waterValue.textContent = `${waterSlider.value} liters/acre`;
+  const simulateBtn = document.getElementById("simulateBtn");
+  const exportBtn = document.getElementById("exportBtn");
+  const viewLogsBtn = document.getElementById("viewLogsBtn");
+
+  let barChart, donutChart;
+
+  simulateBtn.addEventListener("click", async () => {
+    const irrigation = document.getElementById("irrigation").value;
+    const soil = document.getElementById("soil").value;
+    const crop = document.getElementById("crop").value;
+    const area = parseFloat(document.getElementById("area").value);
+    const unit = document.getElementById("unit").value;
+    const location = document.getElementById("location").value;
+
+    if (!irrigation || !soil || !crop || !area || !location) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    const response = await fetch("/simulate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ irrigation, soil, crop, area, unit, location })
     });
-  
-    simulateBtn.addEventListener("click", async () => {
-      const irrigationMethod = document.getElementById("irrigation").value;
-      const soilType = document.getElementById("soil").value;
-      const cropType = document.getElementById("crop").value;
-      const farmSize = parseFloat(document.getElementById("farmSize").value) || 1;
-      const waterInput = parseFloat(waterSlider.value);
-  
-      if (!irrigationMethod || !soilType || !cropType || !farmSize) {
-        alert("Please fill in all fields.");
-        return;
-      }
-  
-      // Calculate water usage based on crop and irrigation
-      const baseWaterNeeds = {
-        Wheat: 300, // liters/acre
-        Rice: 1200,
-        Corn: 500,
-        Tomato: 400
-      };
-      let waterUsed = baseWaterNeeds[cropType] * farmSize;
-      let efficiencyFactor = { Drip: 0.6, Sprinkler: 0.8, Flood: 1.0 }; // Lower = more efficient
-      waterUsed *= efficiencyFactor[irrigationMethod];
-  
-      // Adjust with slider input
-      waterUsed = Math.min(waterUsed, waterInput * farmSize); // Cap at user-adjusted input
-      const waterSaved = (baseWaterNeeds[cropType] * farmSize - waterUsed).toFixed(1);
-  
-      // Fetch weather and tips
-      const weatherData = await fetchWeatherData();
-      const tips = getWaterSavingTips(soilType, cropType, irrigationMethod, weatherData);
-  
-      // Display results
-      document.getElementById("water-used").innerText = `💧 Water Used: ${waterUsed.toFixed(1)} liters`;
-      document.getElementById("water-saved").innerText = `💡 Water Saved: ${waterSaved} liters`;
-      document.getElementById("water-saving-tips").innerText = `🌱 Tip: ${tips}`;
-      document.getElementById("water-output").classList.remove("hidden");
-  
-      // Blockchain logging (stub)
-      logToBlockchain({ irrigationMethod, soilType, cropType, farmSize, waterUsed, waterSaved, timestamp: new Date() });
-  
-      // Generate chart
-      if (chartInstance) chartInstance.destroy();
-      const ctx = document.getElementById("water-chart").getContext("2d");
-      chartInstance = new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: ["Water Used", "Water Saved"],
-          datasets: [{
-            label: "Water (liters)",
-            data: [waterUsed, waterSaved],
-            backgroundColor: ["#f6ad55", "#38a169"],
-            borderColor: "#2f855a",
-            borderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: { y: { beginAtZero: true } },
-          plugins: { legend: { position: "top" } }
+
+    const data = await response.json();
+    const {
+      used_liters,
+      used_gallons,
+      saved_liters,
+      saved_gallons,
+      score,
+      badge,
+      weather,
+      tip,
+      eco_tip,
+      rainAlert,
+      match
+    } = data;
+
+    document.getElementById("results").classList.remove("hidden");
+
+    document.getElementById("weather-summary").innerText = `🌦️ Weather: ${weather.temp}°C, ${weather.humidity}% humidity, ${weather.desc}`;
+    document.getElementById("rain-alert").innerText = rainAlert ? `🌧️ Rain forecasted in next 24hr. Reduce irrigation by 30%!` : "";
+
+    document.getElementById("water-used").innerText = `💧 Water Used: ${used_liters}L / ${used_gallons} gal`;
+    document.getElementById("water-saved").innerText = `💡 Water Saved: ${saved_liters}L / ${saved_gallons} gal`;
+
+    const level = score >= 80 ? "High" : score >= 60 ? "Moderate" : "Low";
+    document.getElementById("conservation-score").innerText = `🌿 Score: ${score}% (${level})`;
+    document.getElementById("badge").innerText = `🥇 Badge: ${badge}`;
+    document.getElementById("soil-crop-match").innerText = `🧪 Soil-Crop Match: ${match}`;
+    document.getElementById("smart-tip").innerText = `💬 Tip: ${tip}\n${eco_tip}`;
+
+    // Bar Chart
+    if (barChart) barChart.destroy();
+    const ctx1 = document.getElementById("barChart").getContext("2d");
+    barChart = new Chart(ctx1, {
+      type: "bar",
+      data: {
+        labels: ["Water Used", "Water Saved"],
+        datasets: [{
+          label: "Liters",
+          data: [used_liters, saved_liters],
+          backgroundColor: ["#3b82f6", "#10b981"]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: ctx => `${ctx.label}: ${ctx.parsed.y.toFixed(1)} liters`
+            }
+          }
         }
-      });
+      }
     });
-  
-    // Stub for viewing past data
-    document.getElementById("viewDataBtn").addEventListener("click", () => {
-      alert("Past simulations would be displayed here (blockchain data).");
+
+    // Donut Chart
+    if (donutChart) donutChart.destroy();
+    const ctx2 = document.getElementById("donutChart").getContext("2d");
+    donutChart = new Chart(ctx2, {
+      type: "doughnut",
+      data: {
+        labels: ["Efficiency", "Waste"],
+        datasets: [{
+          data: [score, 100 - score],
+          backgroundColor: ["#16a34a", "#f87171"]
+        }]
+      },
+      options: {
+        responsive: true,
+        cutout: "70%",
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: ctx => `${ctx.label}: ${ctx.parsed.toFixed(1)}%`
+            }
+          }
+        }
+      }
     });
   });
-  
-  // Weather API fetch
-  async function fetchWeatherData() {
-    const apiKey = "YOUR_API_KEY"; // Replace with your OpenWeatherMap key
-    const city = "YOUR_CITY"; // Replace with a default or user-input location
-    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      return { rainExpected: data.list.some(item => item.rain && item.rain["3h"] > 0) };
-    } catch (e) {
-      console.error("Weather fetch failed:", e);
-      return { rainExpected: false };
-    }
-  }
-  
-  // Enhanced tips function
-  function getWaterSavingTips(soilType, cropType, irrigationMethod, weatherData) {
-    const baseTips = {
-      Loamy: `Loamy soil retains water well. For ${cropType}, use ${irrigationMethod} sparingly.`,
-      Sandy: `Sandy soil drains fast. For ${cropType}, mulch and use ${irrigationMethod} consistently.`,
-      Clay: `Clay holds water. For ${cropType}, avoid overwatering with ${irrigationMethod}.`,
-      Silty: `Silty soil retains moisture. For ${cropType}, monitor ${irrigationMethod} usage.`,
-      Peaty: `Peaty soil is water-rich. For ${cropType}, reduce ${irrigationMethod} frequency.`,
-      Chalky: `Chalky soil needs care. For ${cropType}, adjust ${irrigationMethod} to avoid runoff.`
-    };
-    let tip = baseTips[soilType] || "Adjust irrigation based on crop needs.";
-    if (weatherData.rainExpected) tip += " 🌧️ Skip irrigation today due to rain!";
-    return tip;
-  }
-  
-  // Blockchain logging (stub)
-  function logToBlockchain(data) {
-    console.log("Logged to blockchain:", data); // Replace with actual blockchain integration
-  }
+
+  exportBtn.addEventListener("click", async () => {
+    const crop = document.getElementById("crop").value;
+    const soil = document.getElementById("soil").value;
+    const irrigation = document.getElementById("irrigation").value;
+    const area = document.getElementById("area").value;
+    const location = document.getElementById("location").value;
+
+    const res = await fetch("/export-water-pdf", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ crop, soil, irrigation, area, location })
+    });
+
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "water_simulation_report.pdf";
+    link.click();
+  });
+
+  viewLogsBtn.addEventListener("click", async () => {
+    const res = await fetch("/water-logs");
+    const logs = await res.json();
+    const list = document.getElementById("log-list");
+    list.innerHTML = "";
+
+    logs.slice(-5).reverse().forEach(log => {
+      const item = document.createElement("li");
+      item.innerText = `🕒 ${new Date(log.timestamp * 1000).toLocaleString()} – ${log.input.crop} | ${log.input.irrigation} | ${log.input.soil} | Score: ${log.output.score}%`;
+      list.appendChild(item);
+    });
+  });
+});

@@ -1,0 +1,97 @@
+/* static/style.css */
+
+/* GENERAL */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to bottom right, #e6f4ea, #fffde4);
+    color: #333;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    color: #2f855a;
+  }
+  
+  /* NAVBAR */
+  nav {
+    border-bottom: 2px solid #c6f6d5;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+  nav ul li a {
+    transition: color 0.3s ease;
+    padding: 8px 12px;
+    border-radius: 6px;
+  }
+  nav ul li a:hover {
+    background-color: #d9f99d;
+    color: #065f46;
+  }
+  
+  /* BUTTONS */
+  .btn {
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  .btn-success {
+    background-color: #38a169;
+    border: 2px solid #2f855a;
+  }
+  .btn-success:hover {
+    background-color: #2f855a;
+    color: white;
+  }
+  .btn-warning {
+    background-color: #f6ad55;
+    border: 2px solid #dd6b20;
+  }
+  .btn-warning:hover {
+    background-color: #dd6b20;
+    color: white;
+  }
+  
+  /* SECTION BOXES */
+  section .box {
+    border: 2px solid #a0aec0;
+    border-radius: 12px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  section .box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* HERO */
+  .hero {
+    background: linear-gradient(to right, #d9f99d, #fefcbf);
+    padding-top: 60px;
+    padding-bottom: 30px;
+  }
+  
+  /* FOOTER */
+  footer {
+    border-top: 2px solid #cbd5e0;
+    background-color: #f0fff4;
+  }
+  
+  /* GIF STYLING */
+  .hero img {
+    border: 2px solid #4a5568;
+    border-radius: 16px;
+  }
+  
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav ul {
+      flex-direction: column;
+      gap: 10px;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+  
