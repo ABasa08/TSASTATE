@@ -2,49 +2,73 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Planner – TSA</title>
+  <title>Sustainability Dashboard – AgriNova</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='planner.css') }}">
+  <script src="https://unpkg.com/three@0.149.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.149.0/examples/js/controls/OrbitControls.js" 
+          onerror="this.src='https://cdn.jsdelivr.net/npm/three@0.149.0/examples/js/controls/OrbitControls.js';"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
 </head>
-
-<body class="bg-green-50 text-gray-900 font-sans">
-
+<body class="bg-green-50 text-gray-800 font-sans">
   <!-- Navbar -->
   <nav class="bg-white shadow sticky top-0 z-50">
     <div class="container mx-auto flex justify-between items-center py-4 px-6">
-      <h1 class="text-2xl font-bold text-green-700">🌿 TSA</h1>
-      <ul class="flex gap-5 font-medium text-sm">
+      <h1 class="text-2xl font-bold text-green-700">🌿 AgriNova</h1>
+      <ul class="flex gap-5 text-sm font-medium">
         <li><a href="/" class="hover:text-green-600">Home</a></li>
-        <li><a href="/planner" class="text-green-600 font-semibold">Planner</a></li>
+        <li><a href="/planner" class="hover:text-green-600">Planner</a></li>
         <li><a href="/water" class="hover:text-green-600">Water</a></li>
-        <li><a href="/dashboard" class="hover:text-green-600">Dashboard</a></li>
+        <li><a href="/dashboard" class="text-green-600 font-semibold">Dashboard</a></li>
         <li><a href="/tips" class="hover:text-green-600">Tips</a></li>
         <li><a href="/reports" class="hover:text-green-600">Reports</a></li>
       </ul>
-    </div>
+    </div>   
   </nav>
 
-  <section class="max-w-4xl mx-auto py-12 px-4">
-    <h2 class="text-3xl font-bold text-green-700 mb-6">📊 Sustainability Dashboard</h2>
-
-    <div class="grid grid-cols-2 gap-6 mb-10">
-      <div>
-        <p>🌿 <strong>EcoScore:</strong> <span id="eco-score">Loading...</span></p>
-        <p>💧 <strong>Water Saved:</strong> <span id="water-saved">Loading...</span></p>
-        <p>🌱 <strong>Soil Health:</strong> <span id="soil-health">Loading...</span></p>
-        <p>🌾 <strong>Yield Efficiency:</strong> <span id="yield-efficiency">Loading...</span></p>
+  <!-- Dashboard -->
+  <section class="max-w-5xl mx-auto bg-white p-8 my-10 rounded-3xl shadow-lg border border-green-300">
+    <h2 class="text-3xl font-bold text-center text-green-800 mb-8">🌍 Sustainability Dashboard</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- EcoScore -->
+      <div class="bg-green-50 p-4 rounded-xl shadow">
+        <h3 class="text-lg font-semibold text-green-700">🏆 EcoScore</h3>
+        <canvas id="ecoscore-chart" class="w-full h-32"></canvas>
+        <p id="ecoscore-text" class="text-center text-sm mt-2"></p>
+        <p id="ai-tip" class="text-green-700 text-xs mt-1 italic"></p>
       </div>
-      <div>
-        <canvas id="dashboard-chart" width="300" height="200"></canvas>
+      <!-- Water Saved -->
+      <div class="bg-green-50 p-4 rounded-xl shadow">
+        <h3 class="text-lg font-semibold text-green-700">💧 Water Saved</h3>
+        <canvas id="water-chart" class="w-full h-32"></canvas>
+        <p id="water-text" class="text-center text-sm mt-2"></p>
+      </div>
+      <!-- Soil Health -->
+      <div class="bg-green-50 p-4 rounded-xl shadow">
+        <h3 class="text-lg font-semibold text-green-700">🌱 Soil Health</h3>
+        <canvas id="soil-chart" class="w-full h-32"></canvas>
+        <p id="soil-text" class="text-center text-sm mt-2"></p>
+      </div>
+      <!-- Yield Efficiency -->
+      <div class="bg-green-50 p-4 rounded-xl shadow">
+        <h3 class="text-lg font-semibold text-green-700">🌾 Yield Efficiency</h3>
+        <canvas id="yield-chart" class="w-full h-32"></canvas>
+        <p id="yield-text" class="text-center text-sm mt-2"></p>
       </div>
     </div>
-
-    <button id="view-dashboard-data" class="underline text-green-600">📂 View All Data</button>
-    <div id="dashboard-history" class="mt-4 hidden"></div>
+    <!-- View Blockchain Data -->
+    <div class="text-center mt-6">
+      <button id="viewDataBtn" class="bg-gray-100 text-green-700 px-6 py-2 border border-green-400 rounded hover:bg-green-50">
+        📂 View Blockchain Data
+      </button>
+    </div>
+    <div id="blockchain-modal" class="hidden bg-white border border-green-300 rounded-xl shadow p-6 mt-4">
+      <h3 class="text-xl font-bold text-green-800 mb-2">📜 Sustainability Records</h3>
+      <ul id="blockchain-data" class="list-disc list-inside text-gray-700 text-sm space-y-1"></ul>
+    </div>
   </section>
 
-  <script src="/static/main.js"></script>
+  <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
 </body>
 </html>

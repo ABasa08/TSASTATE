@@ -1,193 +1,111 @@
 [
   {
     "index": 0,
-    "timestamp": 1743454230.797278,
+    "timestamp": 1743481755.245665,
     "feature": "Genesis",
     "data": "Initial block",
     "prev_hash": "0",
-    "hash": "a80babfd43216bcf79516628ad1e265ce19ac282a9671fc72fd4d5886ea0cdb4"
+    "hash": "07d04dcd7d286b1b27b03049c6dd36d695cf9b3590576565f24e8a27efd47bad"
   },
   {
     "index": 1,
-    "timestamp": 1743454264.061397,
-    "feature": "Dashboard Accessed",
+    "timestamp": 1743481817.788485,
+    "feature": "Crop Planner",
     "data": {
-      "ecoScore": "Silver",
-      "waterSaved": 120,
-      "soilHealth": 8.5,
-      "yieldEfficiency": 92,
-      "labels": [
-        "Week 1",
-        "Week 2",
-        "Week 3"
-      ],
-      "history": [
-        60,
-        80,
-        92
-      ]
+      "input": {
+        "crop": "Cucumber",
+        "soil": "Loamy",
+        "area": "23",
+        "yield": 2
+      },
+      "output": {
+        "yield": "2.2 tons",
+        "companions": [
+          "Dill",
+          "Radish"
+        ],
+        "tip": "Provide trellis support and mulch well."
+      }
     },
-    "prev_hash": "a80babfd43216bcf79516628ad1e265ce19ac282a9671fc72fd4d5886ea0cdb4",
-    "hash": "c4ffb68b2971535c02820ad2573d61c3b56b40b8e9fcd51ed25ade0945776487"
+    "prev_hash": "07d04dcd7d286b1b27b03049c6dd36d695cf9b3590576565f24e8a27efd47bad",
+    "hash": "26d7c5795e19a22858573e7be8bde59316bbaf3ad3c0881329d4e8a8ee5ce7b2"
   },
   {
     "index": 2,
-    "timestamp": 1743454391.96206,
+    "timestamp": 1743481829.6990452,
     "feature": "Water Simulation",
     "data": {
       "input": {
-        "irrigation": "Drip",
-        "soil": "Peaty",
-        "crop": "Sugarcane",
-        "area": 500,
-        "unit": "acres",
-        "location": "Chicago"
-      },
-      "output": {
-        "used_liters": 450000.0,
-        "used_gallons": 118877.4,
-        "saved_liters": 300000.0,
-        "saved_gallons": 79251.6,
-        "score": 40.0,
-        "badge": "\ud83d\udfe5 Poor",
-        "weather": {
-          "temp": 6.14,
-          "humidity": 67,
-          "desc": "Broken Clouds",
-          "rain": false
-        },
-        "tip": "Use Drip for Sugarcane on Peaty soil. ",
-        "eco_tip": "\ud83c\udf3f Eco Tip: Use rainwater harvesting in wet seasons to save 50%.",
-        "rainAlert": false,
-        "match": "Okay"
-      }
-    },
-    "prev_hash": "c4ffb68b2971535c02820ad2573d61c3b56b40b8e9fcd51ed25ade0945776487",
-    "hash": "f74f31ee6e7a8b4f778b78166ea34f255683bdbb6175f3819ea0b1197cedad2e"
-  },
-  {
-    "index": 3,
-    "timestamp": 1743454725.154027,
-    "feature": "Crop Planner",
-    "data": {
-      "input": {
-        "crop": "Rice",
-        "soil": "Clay",
-        "area": "23",
-        "yield": 23
-      },
-      "output": {
-        "yield": "25.3 tons",
-        "companions": [
-          "Beans",
-          "Sunflowers"
-        ]
-      }
-    },
-    "prev_hash": "f74f31ee6e7a8b4f778b78166ea34f255683bdbb6175f3819ea0b1197cedad2e",
-    "hash": "695ff7ad6c69d1896d81a5b429b677a12c2f2c3f1d448f3c4b582189fd915a8c"
-  },
-  {
-    "index": 4,
-    "timestamp": 1743454761.084631,
-    "feature": "Dashboard Accessed",
-    "data": {
-      "ecoScore": "Silver",
-      "waterSaved": 120,
-      "soilHealth": 8.5,
-      "yieldEfficiency": 92,
-      "labels": [
-        "Week 1",
-        "Week 2",
-        "Week 3"
-      ],
-      "history": [
-        60,
-        80,
-        92
-      ]
-    },
-    "prev_hash": "695ff7ad6c69d1896d81a5b429b677a12c2f2c3f1d448f3c4b582189fd915a8c",
-    "hash": "f3b67c8961b847396cd44809acadff5b7570ae49e036eda3308df3b57f6ee289"
-  },
-  {
-    "index": 5,
-    "timestamp": 1743456395.44606,
-    "feature": "Crop Planner",
-    "data": {
-      "input": {
-        "crop": "Tomato",
-        "soil": "Clay",
-        "area": "2900",
-        "yield": 2.5
-      },
-      "output": {
-        "yield": "2.75 tons",
-        "companions": [
-          "Beans",
-          "Sunflowers"
-        ]
-      }
-    },
-    "prev_hash": "f3b67c8961b847396cd44809acadff5b7570ae49e036eda3308df3b57f6ee289",
-    "hash": "86d9cbdb82a1731b51c91b349ad573ea70f5799b8a1d2ec9ebc88bf2ad2828a5"
-  },
-  {
-    "index": 6,
-    "timestamp": 1743456441.816107,
-    "feature": "Water Simulation",
-    "data": {
-      "input": {
-        "irrigation": "Flood",
-        "soil": "Silty",
-        "crop": "Cucumber",
-        "area": 2000,
+        "irrigation": "Sprinkler",
+        "soil": "Sandy",
+        "crop": "Corn",
+        "area": 14,
         "unit": "acres",
         "location": "Seattle"
       },
       "output": {
-        "used_liters": 490000.0,
-        "used_gallons": 129444.3,
-        "saved_liters": 210000.0,
-        "saved_gallons": 55476.1,
-        "score": 30.0,
-        "badge": "\ud83d\udfe5 Poor",
+        "used_liters": 3332.0,
+        "used_gallons": 880.2,
+        "saved_liters": 3668.0,
+        "saved_gallons": 969.0,
+        "score": 52.4,
+        "badge": "\ud83d\udfe8 Moderate",
         "weather": {
-          "temp": 10.91,
-          "humidity": 71,
+          "temp": 7.52,
+          "humidity": 87,
           "desc": "Light Rain",
           "rain": true
         },
-        "tip": "Use Flood for Cucumber on Silty soil. Rain expected \u2013 reduce watering.",
-        "eco_tip": "\ud83c\udf3f Eco Tip: Use rainwater harvesting in wet seasons to save 50%.",
+        "alerts": [
+          "\ud83c\udf27\ufe0f Rain expected in next 24hr \u2013 reduce irrigation.",
+          "\ud83d\udca7 High humidity \u2013 reduce water slightly."
+        ],
+        "tip": "\u26a0\ufe0f To improve your Corn yield:\n\u2022 Switch irrigation to Sprinkler\n\u2022 Use Loamy soil for better root absorption",
+        "eco_tip": "\ud83d\udca7 Rain expected \u2013 save water:\n\u2022 Set up rain barrels\n\u2022 Skip tomorrow\u2019s irrigation schedule",
         "rainAlert": true,
-        "match": "Okay"
+        "match": "Poor"
       }
     },
-    "prev_hash": "86d9cbdb82a1731b51c91b349ad573ea70f5799b8a1d2ec9ebc88bf2ad2828a5",
-    "hash": "18f7784d175c8be43e367e6bf78ca54e6583007b876894a94f02f3cdac3fb388"
+    "prev_hash": "26d7c5795e19a22858573e7be8bde59316bbaf3ad3c0881329d4e8a8ee5ce7b2",
+    "hash": "c63aa030e8462b3a2b2ff57a6f26bd15feb68052975435a12313963ca9d874b8"
   },
   {
-    "index": 7,
-    "timestamp": 1743456474.1799302,
-    "feature": "Dashboard Accessed",
+    "index": 3,
+    "timestamp": 1743481832.961658,
+    "feature": "Water Simulation",
     "data": {
-      "ecoScore": "Silver",
-      "waterSaved": 120,
-      "soilHealth": 8.5,
-      "yieldEfficiency": 92,
-      "labels": [
-        "Week 1",
-        "Week 2",
-        "Week 3"
-      ],
-      "history": [
-        60,
-        80,
-        92
-      ]
+      "input": {
+        "irrigation": "Sprinkler",
+        "soil": "Loamy",
+        "crop": "Corn",
+        "area": 14,
+        "unit": "acres",
+        "location": "Seattle"
+      },
+      "output": {
+        "used_liters": 3332.0,
+        "used_gallons": 880.2,
+        "saved_liters": 3668.0,
+        "saved_gallons": 969.0,
+        "score": 52.4,
+        "badge": "\ud83d\udfe8 Moderate",
+        "weather": {
+          "temp": 7.52,
+          "humidity": 87,
+          "desc": "Light Rain",
+          "rain": true
+        },
+        "alerts": [
+          "\ud83c\udf27\ufe0f Rain expected in next 24hr \u2013 reduce irrigation.",
+          "\ud83d\udca7 High humidity \u2013 reduce water slightly."
+        ],
+        "tip": "\u2705 Your setup is optimized for Corn.\n\u2022 Sprinkler irrigation supports water efficiency\n\u2022 Loamy soil enhances nutrient retention for better yield",
+        "eco_tip": "\ud83d\udca7 Rain expected \u2013 save water:\n\u2022 Set up rain barrels\n\u2022 Skip tomorrow\u2019s irrigation schedule",
+        "rainAlert": true,
+        "match": "Excellent"
+      }
     },
-    "prev_hash": "18f7784d175c8be43e367e6bf78ca54e6583007b876894a94f02f3cdac3fb388",
-    "hash": "3bb083a8179dcd674f421c8ede4bdbccf9f86d8f5e275858066a0aa7befa32d8"
+    "prev_hash": "c63aa030e8462b3a2b2ff57a6f26bd15feb68052975435a12313963ca9d874b8",
+    "hash": "bc7c6c4df31dcf57db5405428f97055a583513b69c945bbf41c4ea7a8555d044"
   }
 ]

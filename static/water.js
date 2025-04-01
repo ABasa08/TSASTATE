@@ -2,56 +2,60 @@ document.addEventListener("DOMContentLoaded", () => {
   const simulateBtn = document.getElementById("simulateBtn");
   const exportBtn = document.getElementById("exportBtn");
   const viewLogsBtn = document.getElementById("viewLogsBtn");
-
+  const fixBtn = document.getElementById("fixBtn");
   let barChart, donutChart;
 
-  simulateBtn.addEventListener("click", async () => {
-    const irrigation = document.getElementById("irrigation").value;
-    const soil = document.getElementById("soil").value;
-    const crop = document.getElementById("crop").value;
-    const area = parseFloat(document.getElementById("area").value);
-    const unit = document.getElementById("unit").value;
-    const location = document.getElementById("location").value;
+  const cropProfiles = {
+    Wheat: { soil: "Loamy", irrigation: "Sprinkler" },
+    Rice: { soil: "Silty", irrigation: "Flood" },
+    Corn: { soil: "Loamy", irrigation: "Sprinkler" },
+    Tomato: { soil: "Loamy", irrigation: "Drip" },
+    Cucumber: { soil: "Peaty", irrigation: "Drip" },
+    Sugarcane: { soil: "Silty", irrigation: "Flood" },
+    Lettuce: { soil: "Loamy", irrigation: "Drip" },
+    Carrot: { soil: "Loamy", irrigation: "Drip" },
+    Banana: { soil: "Clay", irrigation: "Sprinkler" }
+  };
 
-    if (!irrigation || !soil || !crop || !area || !location) {
-      alert("Please fill in all fields.");
-      return;
-    }
-
-    const response = await fetch("/simulate", {
+  async function runSimulation(inputs) {
+    const res = await fetch("/simulate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ irrigation, soil, crop, area, unit, location })
+      body: JSON.stringify(inputs)
     });
 
-    const data = await response.json();
+    const data = await res.json();
     const {
-      used_liters,
-      used_gallons,
-      saved_liters,
-      saved_gallons,
-      score,
-      badge,
-      weather,
-      tip,
-      eco_tip,
-      rainAlert,
-      match
+      used_liters, used_gallons,
+      saved_liters, saved_gallons,
+      score, badge, weather,
+      alerts, tip, eco_tip, match
     } = data;
 
     document.getElementById("results").classList.remove("hidden");
-
-    document.getElementById("weather-summary").innerText = `🌦️ Weather: ${weather.temp}°C, ${weather.humidity}% humidity, ${weather.desc}`;
-    document.getElementById("rain-alert").innerText = rainAlert ? `🌧️ Rain forecasted in next 24hr. Reduce irrigation by 30%!` : "";
-
     document.getElementById("water-used").innerText = `💧 Water Used: ${used_liters}L / ${used_gallons} gal`;
     document.getElementById("water-saved").innerText = `💡 Water Saved: ${saved_liters}L / ${saved_gallons} gal`;
-
-    const level = score >= 80 ? "High" : score >= 60 ? "Moderate" : "Low";
-    document.getElementById("conservation-score").innerText = `🌿 Score: ${score}% (${level})`;
+    document.getElementById("conservation-score").innerText = `🌿 Score: ${score}% (${score > 90 ? "High" : score > 70 ? "Moderate" : "Low"})`;
     document.getElementById("badge").innerText = `🥇 Badge: ${badge}`;
-    document.getElementById("soil-crop-match").innerText = `🧪 Soil-Crop Match: ${match}`;
-    document.getElementById("smart-tip").innerText = `💬 Tip: ${tip}\n${eco_tip}`;
+    document.getElementById("weather-summary").innerText = `🌦️ Weather: ${weather.temp}°C, ${weather.humidity}% humidity, ${weather.desc}`;
+    document.getElementById("rain-alert").innerText = alerts.join(" ");
+
+    const tipBox = document.getElementById("smart-tip");
+    tipBox.innerHTML = `💬 <strong>Tip:</strong><br>${tip.replace(/\n/g, "<br>")}`;
+    tipBox.classList.add("text-green-700", "whitespace-pre-line");
+
+    const ecoEl = document.getElementById("eco-tip");
+    ecoEl.innerHTML = `🌿 <strong>Eco Tip:</strong><br>${eco_tip.replace(/\n/g, "<br>")}`;
+    ecoEl.classList.add("text-green-700", "whitespace-pre-line");
+
+    const matchEl = document.getElementById("soil-crop-match");
+    matchEl.innerText = `🧪 Soil-Crop Match: ${match}`;
+    matchEl.className = "font-semibold whitespace-pre-line";
+    matchEl.classList.add(
+      match === "Excellent" ? "text-green-600" :
+      match === "Okay" ? "text-yellow-500" :
+      "text-red-500"
+    );
 
     // Bar Chart
     if (barChart) barChart.destroy();
@@ -71,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
         plugins: {
           tooltip: {
             callbacks: {
-              label: ctx => `${ctx.label}: ${ctx.parsed.y.toFixed(1)} liters`
+              label: ctx => `${ctx.label}: ${ctx.raw} L (${((ctx.raw / (used_liters + saved_liters)) * 100).toFixed(1)}%)`
             }
           }
         }
@@ -102,26 +106,45 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     });
+  }
+
+  simulateBtn.addEventListener("click", () => {
+    const input = {
+      irrigation: document.getElementById("irrigation").value,
+      soil: document.getElementById("soil").value,
+      crop: document.getElementById("crop").value,
+      area: parseFloat(document.getElementById("area").value),
+      unit: document.getElementById("unit").value,
+      location: document.getElementById("location").value
+    };
+    if (!input.irrigation || !input.soil || !input.crop || !input.area || !input.location) {
+      alert("Please fill in all fields.");
+      return;
+    }
+    runSimulation(input);
   });
 
   exportBtn.addEventListener("click", async () => {
-    const crop = document.getElementById("crop").value;
-    const soil = document.getElementById("soil").value;
-    const irrigation = document.getElementById("irrigation").value;
-    const area = document.getElementById("area").value;
-    const location = document.getElementById("location").value;
+    const input = {
+      irrigation: document.getElementById("irrigation").value,
+      soil: document.getElementById("soil").value,
+      crop: document.getElementById("crop").value,
+      area: document.getElementById("area").value,
+      unit: document.getElementById("unit").value,
+      location: document.getElementById("location").value
+    };
 
     const res = await fetch("/export-water-pdf", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ crop, soil, irrigation, area, location })
+      body: JSON.stringify(input)
     });
 
     const blob = await res.blob();
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "water_simulation_report.pdf";
+    link.download = "water_report.pdf";
     link.click();
   });
 
@@ -130,11 +153,63 @@ document.addEventListener("DOMContentLoaded", () => {
     const logs = await res.json();
     const list = document.getElementById("log-list");
     list.innerHTML = "";
+  
+    if (!logs.length) {
+      list.innerHTML = "<li class='text-gray-500 italic'>No past simulations found.</li>";
+      return;
+    }
+  
+    logs
+      .filter(log => log.input && log.output)
+      .slice(-5)
+      .reverse()
+      .forEach(log => {
+        const time = new Date(log.timestamp * 1000).toLocaleString();
+        const crop = log.input.crop || "N/A";
+        const irrigation = log.input.irrigation || "N/A";
+        const score = log.output.score || "N/A";
+        const badge = log.output.badge || "";
+  
+        const item = document.createElement("li");
+        item.className = "text-sm text-gray-800 bg-blue-50 border rounded p-2";
+        item.innerHTML = `
+          🕒 <strong>${time}</strong><br>
+          🌾 <strong>Crop:</strong> ${crop} | 💧 <strong>Irrigation:</strong> ${irrigation}<br>
+          ✅ <strong>Score:</strong> ${score}% | 🏅 <strong>Badge:</strong> ${badge}
+        `;
+        list.appendChild(item);
+      });
+  });
+  
 
-    logs.slice(-5).reverse().forEach(log => {
-      const item = document.createElement("li");
-      item.innerText = `🕒 ${new Date(log.timestamp * 1000).toLocaleString()} – ${log.input.crop} | ${log.input.irrigation} | ${log.input.soil} | Score: ${log.output.score}%`;
-      list.appendChild(item);
-    });
+  fixBtn.addEventListener("click", () => {
+    const crop = document.getElementById("crop").value;
+    const location = document.getElementById("location").value;
+    const area = parseFloat(document.getElementById("area").value);
+    const unit = document.getElementById("unit").value;
+
+    if (!crop || !location || !area) {
+      alert("Please select crop, farm area, and location.");
+      return;
+    }
+
+    const suggestion = cropProfiles[crop];
+    document.getElementById("irrigation").value = suggestion.irrigation;
+    document.getElementById("soil").value = suggestion.soil;
+
+    const optimizedInput = {
+      irrigation: suggestion.irrigation,
+      soil: suggestion.soil,
+      crop,
+      area,
+      unit,
+      location
+    };
+
+    // Show Optimized Message
+    document.getElementById("conservation-score").innerText = "🌿 Score: 95% (High) ✅ Optimized";
+    document.getElementById("badge").innerText = "🥇 Badge: 🟩 Excellent";
+
+    runSimulation(optimizedInput);
   });
 });
