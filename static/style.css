@@ -1,6 +1,4 @@
-/* static/style.css */
 
-/* GENERAL */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(to bottom right, #e6f4ea, #fffde4);
@@ -11,7 +9,7 @@ body {
     color: #2f855a;
   }
   
-  /* NAVBAR */
+ 
   nav {
     border-bottom: 2px solid #c6f6d5;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
@@ -26,7 +24,7 @@ body {
     color: #065f46;
   }
   
-  /* BUTTONS */
+  
   .btn {
     font-weight: 600;
     border-radius: 8px;
@@ -49,7 +47,7 @@ body {
     color: white;
   }
   
-  /* SECTION BOXES */
+  
   section .box {
     border: 2px solid #a0aec0;
     border-radius: 12px;
@@ -63,20 +61,19 @@ body {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   }
   
-  /* HERO */
+  
   .hero {
     background: linear-gradient(to right, #d9f99d, #fefcbf);
     padding-top: 60px;
     padding-bottom: 30px;
   }
   
-  /* FOOTER */
   footer {
     border-top: 2px solid #cbd5e0;
     background-color: #f0fff4;
   }
   
-  /* GIF STYLING */
+  
   .hero img {
     border: 2px solid #4a5568;
     border-radius: 16px;

@@ -1,7 +1,7 @@
-// main.js
+
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Crop Planner Form
+   
     const cropForm = document.getElementById("crop-form");
     if (cropForm) {
       cropForm.addEventListener("submit", async (e) => {
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     }
   
-    // Water Simulator
+    
     const waterForm = document.getElementById("water-form");
     if (waterForm) {
       waterForm.addEventListener("submit", async (e) => {
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   
-    // Dashboard Chart
+    
     if (document.getElementById("dashboard-chart")) {
       fetch("/dashboard-data")
         .then(res => res.json())

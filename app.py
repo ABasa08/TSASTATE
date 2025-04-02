@@ -8,7 +8,7 @@ app = Flask(__name__)
 socketio = SocketIO(app)
 OPENWEATHER_KEY = "c51ef5af8ecbffc163bf9de5ed12587d"
 
-# ----------------- Blockchain -----------------
+
 class Block:
     def __init__(self, index, timestamp, feature, data, prev_hash):
         self.index = index
@@ -20,7 +20,7 @@ class Block:
 
     def calc_hash(self):
         block_str = f"{self.index}{self.timestamp}{self.feature}{json.dumps(self.data)}{self.prev_hash}"
-        return hashlib.sha256(block_str.encode()).hexdigest()
+        return hashlib.sha256(block_str.encode()).hexdigest() # Same Blockchain Network as Bitcoin SHA256
 
 class Blockchain:
     def __init__(self):
@@ -34,7 +34,7 @@ class Blockchain:
         new_block = Block(len(self.chain), time.time(), feature, data, last.hash)
         self.chain.append(new_block)
         self.save_chain()
-        # Emit WebSocket update with full data
+        
         if feature == "Crop Planner":
             socketio.emit("update", {
                 "type": "planner",
@@ -52,7 +52,7 @@ class Blockchain:
 
 blockchain = Blockchain()
 
-# ----------------- Crop Profiles -----------------
+
 crop_profiles = {
     "Wheat": {"ideal_soil": "Loamy", "ideal_irrigation": "Sprinkler"},
     "Rice": {"ideal_soil": "Silty", "ideal_irrigation": "Flood"},
@@ -65,7 +65,7 @@ crop_profiles = {
     "Banana": {"ideal_soil": "Clay", "ideal_irrigation": "Sprinkler"},
 }
 
-# ----------------- Routes -----------------
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -90,7 +90,7 @@ def tips():
 def reports():
     return render_template("reports.html")
 
-# ----------------- Water Simulation -----------------
+
 @app.route("/simulate", methods=["POST"])
 def simulate():
     data = request.json
@@ -179,7 +179,7 @@ def simulate():
     blockchain.add_block("Water Simulation", {"input": data, "output": result})
     return jsonify(result)
 
-# ----------------- Forecast -----------------
+
 def get_forecast(city):
     try:
         url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={OPENWEATHER_KEY}&units=metric"
@@ -195,7 +195,7 @@ def get_forecast(city):
     except:
         return {"temp": "-", "humidity": "-", "desc": "Unavailable", "rain": False}
 
-# ----------------- Water Logs -----------------
+
 @app.route("/water-logs")
 def water_logs():
     with open("chain.json") as f:
@@ -203,12 +203,12 @@ def water_logs():
     logs = [b for b in chain if b.get("feature") == "Water Simulation" and "input" in b.get("data", {})]
     return jsonify(logs)
 
-# ----------------- Export PDF -----------------
+
 @app.route("/export-water-pdf", methods=["POST"])
 def export_water_pdf():
     data = request.json
     html = f"""
-    <h2>💦 AgriNova – Water Simulation Report</h2>
+    <h2>TSA – Water Simulation Report</h2>
     <p><b>Crop:</b> {data['crop']}</p>
     <p><b>Soil:</b> {data['soil']}</p>
     <p><b>Irrigation:</b> {data['irrigation']}</p>
@@ -221,7 +221,7 @@ def export_water_pdf():
     response.headers["Content-Disposition"] = "attachment; filename=water_simulation_report.pdf"
     return response
 
-# ----------------- Crop Planner Prediction -----------------
+
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.get_json()
@@ -263,7 +263,7 @@ def predict():
     blockchain.add_block("Crop Planner", {"input": data, "output": output})
     return jsonify(output)
 
-# ----------------- Dashboard EcoScore AI -----------------
+
 @app.route("/predict-ecoscore", methods=["POST"])
 def predict_ecoscore():
     data = request.json
@@ -282,12 +282,12 @@ def predict_ecoscore():
     blockchain.add_block("EcoScore Prediction", {"input": data, "output": result})
     return jsonify(result)
 
-# ----------------- Chain Viewer -----------------
+
 @app.route("/chain.json")
 def view_chain():
     return send_file("chain.json")
 
-# ----------------- Log Fix -----------------
+
 @app.route("/log-fix", methods=["POST"])
 def log_fix():
     data = request.json
@@ -306,7 +306,7 @@ def log_fix():
     blockchain.add_block("FixSuggestion", log_data)
     return jsonify({"status": "success"})
 
-# ----------------- WebSocket Handlers -----------------
+
 @socketio.on("connect")
 def handle_connect():
     print("Client connected")
@@ -315,6 +315,6 @@ def handle_connect():
 def handle_disconnect():
     print("Client disconnected")
 
-# ----------------- Run -----------------
+
 if __name__ == "__main__":
     socketio.run(app, debug=True, port=5000)

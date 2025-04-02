@@ -1,111 +1,56 @@
 [
   {
     "index": 0,
-    "timestamp": 1743481755.245665,
+    "timestamp": 1743555701.4463098,
     "feature": "Genesis",
     "data": "Initial block",
     "prev_hash": "0",
-    "hash": "07d04dcd7d286b1b27b03049c6dd36d695cf9b3590576565f24e8a27efd47bad"
+    "hash": "813edd13145326d64339cb0e98cb6bbd2ce08c8219b1ccf1614c816697ae1f47"
   },
   {
     "index": 1,
-    "timestamp": 1743481817.788485,
+    "timestamp": 1743556312.8483908,
     "feature": "Crop Planner",
     "data": {
       "input": {
-        "crop": "Cucumber",
-        "soil": "Loamy",
-        "area": "23",
+        "crop": "Corn",
+        "soil": "Clay",
+        "area": "13",
         "yield": 2
       },
       "output": {
         "yield": "2.2 tons",
         "companions": [
-          "Dill",
-          "Radish"
+          "Beans",
+          "Squash"
         ],
-        "tip": "Provide trellis support and mulch well."
+        "tip": "Apply compost and check soil pH."
       }
     },
-    "prev_hash": "07d04dcd7d286b1b27b03049c6dd36d695cf9b3590576565f24e8a27efd47bad",
-    "hash": "26d7c5795e19a22858573e7be8bde59316bbaf3ad3c0881329d4e8a8ee5ce7b2"
+    "prev_hash": "813edd13145326d64339cb0e98cb6bbd2ce08c8219b1ccf1614c816697ae1f47",
+    "hash": "0e7cef5c684438eae2b882991bb7f968e172e5bb3188db78e16802052be8d267"
   },
   {
     "index": 2,
-    "timestamp": 1743481829.6990452,
-    "feature": "Water Simulation",
+    "timestamp": 1743556616.089565,
+    "feature": "Crop Planner",
     "data": {
       "input": {
-        "irrigation": "Sprinkler",
-        "soil": "Sandy",
-        "crop": "Corn",
-        "area": 14,
-        "unit": "acres",
-        "location": "Seattle"
+        "crop": "Sugarcane",
+        "soil": "Clay",
+        "area": "15",
+        "yield": 2
       },
       "output": {
-        "used_liters": 3332.0,
-        "used_gallons": 880.2,
-        "saved_liters": 3668.0,
-        "saved_gallons": 969.0,
-        "score": 52.4,
-        "badge": "\ud83d\udfe8 Moderate",
-        "weather": {
-          "temp": 7.52,
-          "humidity": 87,
-          "desc": "Light Rain",
-          "rain": true
-        },
-        "alerts": [
-          "\ud83c\udf27\ufe0f Rain expected in next 24hr \u2013 reduce irrigation.",
-          "\ud83d\udca7 High humidity \u2013 reduce water slightly."
+        "yield": "2.2 tons",
+        "companions": [
+          "Marigold",
+          "Spinach"
         ],
-        "tip": "\u26a0\ufe0f To improve your Corn yield:\n\u2022 Switch irrigation to Sprinkler\n\u2022 Use Loamy soil for better root absorption",
-        "eco_tip": "\ud83d\udca7 Rain expected \u2013 save water:\n\u2022 Set up rain barrels\n\u2022 Skip tomorrow\u2019s irrigation schedule",
-        "rainAlert": true,
-        "match": "Poor"
+        "tip": "Ensure good drainage and sunlight."
       }
     },
-    "prev_hash": "26d7c5795e19a22858573e7be8bde59316bbaf3ad3c0881329d4e8a8ee5ce7b2",
-    "hash": "c63aa030e8462b3a2b2ff57a6f26bd15feb68052975435a12313963ca9d874b8"
-  },
-  {
-    "index": 3,
-    "timestamp": 1743481832.961658,
-    "feature": "Water Simulation",
-    "data": {
-      "input": {
-        "irrigation": "Sprinkler",
-        "soil": "Loamy",
-        "crop": "Corn",
-        "area": 14,
-        "unit": "acres",
-        "location": "Seattle"
-      },
-      "output": {
-        "used_liters": 3332.0,
-        "used_gallons": 880.2,
-        "saved_liters": 3668.0,
-        "saved_gallons": 969.0,
-        "score": 52.4,
-        "badge": "\ud83d\udfe8 Moderate",
-        "weather": {
-          "temp": 7.52,
-          "humidity": 87,
-          "desc": "Light Rain",
-          "rain": true
-        },
-        "alerts": [
-          "\ud83c\udf27\ufe0f Rain expected in next 24hr \u2013 reduce irrigation.",
-          "\ud83d\udca7 High humidity \u2013 reduce water slightly."
-        ],
-        "tip": "\u2705 Your setup is optimized for Corn.\n\u2022 Sprinkler irrigation supports water efficiency\n\u2022 Loamy soil enhances nutrient retention for better yield",
-        "eco_tip": "\ud83d\udca7 Rain expected \u2013 save water:\n\u2022 Set up rain barrels\n\u2022 Skip tomorrow\u2019s irrigation schedule",
-        "rainAlert": true,
-        "match": "Excellent"
-      }
-    },
-    "prev_hash": "c63aa030e8462b3a2b2ff57a6f26bd15feb68052975435a12313963ca9d874b8",
-    "hash": "bc7c6c4df31dcf57db5405428f97055a583513b69c945bbf41c4ea7a8555d044"
+    "prev_hash": "0e7cef5c684438eae2b882991bb7f968e172e5bb3188db78e16802052be8d267",
+    "hash": "499e8f8ec756bf95d87f76efe4e1e5ab8a3ac026b31a0b875c80fa9534b3a450"
   }
 ]
