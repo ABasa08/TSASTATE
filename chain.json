@@ -1,56 +1,110 @@
 [
   {
     "index": 0,
-    "timestamp": 1743555701.4463098,
+    "timestamp": 1743644532.3916469,
     "feature": "Genesis",
     "data": "Initial block",
     "prev_hash": "0",
-    "hash": "813edd13145326d64339cb0e98cb6bbd2ce08c8219b1ccf1614c816697ae1f47"
+    "hash": "91fc84e14e9ea186bf6e302b88c029d28a7c2b3ec984636b5d9aaba59420db30"
   },
   {
     "index": 1,
-    "timestamp": 1743556312.8483908,
+    "timestamp": 1743644679.308909,
     "feature": "Crop Planner",
     "data": {
       "input": {
-        "crop": "Corn",
-        "soil": "Clay",
-        "area": "13",
-        "yield": 2
+        "crop": "Lettuce",
+        "soil": "Silty",
+        "area": "30",
+        "yield": 1,
+        "date": "2025-04-02T07:00:00.000Z"
       },
       "output": {
-        "yield": "2.2 tons",
+        "yield": "1.1 tons",
         "companions": [
-          "Beans",
-          "Squash"
+          "Chives",
+          "Carrot"
         ],
-        "tip": "Apply compost and check soil pH."
+        "tip": "Harvest early for best taste."
       }
     },
-    "prev_hash": "813edd13145326d64339cb0e98cb6bbd2ce08c8219b1ccf1614c816697ae1f47",
-    "hash": "0e7cef5c684438eae2b882991bb7f968e172e5bb3188db78e16802052be8d267"
+    "prev_hash": "91fc84e14e9ea186bf6e302b88c029d28a7c2b3ec984636b5d9aaba59420db30",
+    "hash": "e2c1168e644db6220c908ae86f53b83f11efa2e3b7b060087befae0aa4d9700b"
   },
   {
     "index": 2,
-    "timestamp": 1743556616.089565,
-    "feature": "Crop Planner",
+    "timestamp": 1743644702.2729778,
+    "feature": "Water Simulation",
     "data": {
       "input": {
+        "irrigation": "Drip",
+        "soil": "Silty",
         "crop": "Sugarcane",
-        "soil": "Clay",
-        "area": "15",
-        "yield": 2
+        "area": 12,
+        "unit": "acres",
+        "location": "Seattle"
       },
       "output": {
-        "yield": "2.2 tons",
-        "companions": [
-          "Marigold",
-          "Spinach"
+        "used_liters": 7560.0,
+        "used_gallons": 1997.1,
+        "saved_liters": 10440.0,
+        "saved_gallons": 2758.0,
+        "score": 58.0,
+        "badge": "\ud83d\udfe8 Moderate",
+        "weather": {
+          "temp": 9.98,
+          "humidity": 74,
+          "desc": "Light Rain",
+          "rain": true
+        },
+        "alerts": [
+          "\ud83c\udf27\ufe0f Rain expected in next 24hr \u2013 reduce irrigation."
         ],
-        "tip": "Ensure good drainage and sunlight."
+        "tip": "\u26a0\ufe0f To improve your Sugarcane yield:\n\u2022 Switch irrigation to Flood\n\u2022 Use Silty soil for better root absorption",
+        "eco_tip": "\ud83d\udca7 Rain expected \u2013 save water:\n\u2022 Set up rain barrels\n\u2022 Skip tomorrow\u2019s irrigation schedule",
+        "rainAlert": true,
+        "match": "Okay"
       }
     },
-    "prev_hash": "0e7cef5c684438eae2b882991bb7f968e172e5bb3188db78e16802052be8d267",
-    "hash": "499e8f8ec756bf95d87f76efe4e1e5ab8a3ac026b31a0b875c80fa9534b3a450"
+    "prev_hash": "e2c1168e644db6220c908ae86f53b83f11efa2e3b7b060087befae0aa4d9700b",
+    "hash": "fa8843e2691b5bc3920d3a8ff5ef2b174d2ffc248b8746e71657017eba8d0ef4"
+  },
+  {
+    "index": 3,
+    "timestamp": 1743644704.5441978,
+    "feature": "Water Simulation",
+    "data": {
+      "input": {
+        "irrigation": "Flood",
+        "soil": "Silty",
+        "crop": "Sugarcane",
+        "area": 12,
+        "unit": "acres",
+        "location": "Seattle"
+      },
+      "output": {
+        "used_liters": 12600.0,
+        "used_gallons": 3328.6,
+        "saved_liters": 5400.0,
+        "saved_gallons": 1426.5,
+        "score": 30.0,
+        "badge": "\ud83d\udfe5 Poor",
+        "weather": {
+          "temp": 9.98,
+          "humidity": 74,
+          "desc": "Light Rain",
+          "rain": true
+        },
+        "alerts": [
+          "\ud83c\udf27\ufe0f Rain expected in next 24hr \u2013 reduce irrigation."
+        ],
+        "tip": "\u2705 Your setup is optimized for Sugarcane.\n\u2022 Flood irrigation supports water efficiency\n\u2022 Silty soil enhances nutrient retention for better yield",
+        "eco_tip": "\ud83d\udca7 Rain expected \u2013 save water:\n\u2022 Set up rain barrels\n\u2022 Skip tomorrow\u2019s irrigation schedule",
+        "rainAlert": true,
+        "match": "Excellent"
+      }
+    },
+    "prev_hash": "fa8843e2691b5bc3920d3a8ff5ef2b174d2ffc248b8746e71657017eba8d0ef4",
+    "hash": "ffae62d960a059c53e723e88c47a1c54ac49b7d6b4e6cb198710160524fecc8a"
   }
 ]

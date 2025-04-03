@@ -8,6 +8,17 @@ document.addEventListener("DOMContentLoaded", () => {
   let pastYield = 0;
   let scene, renderer, camera, controls;
 
+  const today = new Date("April 2, 2025");
+  const todayString = today.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+
+  const navLinks = document.querySelectorAll(".nav-link");
+  const currentPath = window.location.pathname;
+  navLinks.forEach(link => {
+    if (link.getAttribute("href") === currentPath) {
+      link.classList.add("active-nav");
+    }
+  });
+
   predictBtn.addEventListener("click", async () => {
     const crop = document.getElementById("crop").value;
     const soil = document.getElementById("soil").value;
@@ -22,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const res = await fetch("/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ crop, soil, area, yield: pastYield })
+      body: JSON.stringify({ crop, soil, area, yield: pastYield, date: today.toISOString() })
     });
 
     const data = await res.json();
@@ -48,6 +59,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("companion-result").textContent = `🌻 Companion Crops: ${data.companions.join(", ")}`;
     document.getElementById("farming-tip").textContent = `🌿 Tip: ${data.tip}`;
 
+    const harvestDate = data.harvest ? new Date(data.harvest) : new Date(today).setMonth(today.getMonth() + 3);
+    const harvestString = new Date(harvestDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+    document.getElementById("task-scheduler").innerHTML = 
+      `<p>Plant ${crop}: ${todayString}<br>Harvest: ${harvestString}</p>` +
+      '<button class="btn btn-sm btn-outline-success mt-2">Add Task</button>';
+
     document.getElementById("planner-output").classList.remove("hidden");
     document.getElementById("planner-output").scrollIntoView({ behavior: "smooth" });
   });
@@ -58,30 +75,60 @@ document.addEventListener("DOMContentLoaded", () => {
     const ctx = document.getElementById("yield-chart").getContext("2d");
     if (window.yieldChart) window.yieldChart.destroy();
 
+    const yieldRate = ((predictedYield - pastYield) / pastYield) * 100;
     window.yieldChart = new Chart(ctx, {
       type: "bar",
       data: {
         labels: ["Past Yield", "Predicted Yield"],
-        datasets: [{
-          label: "Yield (tons)",
-          data: [pastYield, predictedYield],
-          backgroundColor: ["#f87171", "#34d399"]
-        }]
+        datasets: [
+          {
+            label: "Yield (tons)",
+            data: [pastYield, predictedYield],
+            backgroundColor: ["#f87171", "#34d399"],
+            borderRadius: 5
+          },
+          {
+            type: "line",
+            label: "Yield Trend",
+            data: [pastYield, predictedYield],
+            borderColor: "#3b82f6",
+            borderWidth: 2,
+            fill: false,
+            tension: 0.1,
+            pointRadius: 4,
+            pointBackgroundColor: "#3b82f6"
+          }
+        ]
       },
       options: {
         responsive: true,
-        scales: { y: { beginAtZero: true } },
-        plugins: { legend: { display: false } }
+        scales: {
+          y: { beginAtZero: true, title: { display: true, text: "Yield (tons)" } },
+          x: { title: { display: true, text: "Season" } }
+        },
+        plugins: {
+          legend: { display: true, position: "top" },
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                if (context.dataset.label === "Yield Trend") {
+                  return `Trend: ${yieldRate.toFixed(1)}% growth`;
+                }
+                return `${context.dataset.label}: ${context.raw} tons`;
+              }
+            }
+          }
+        }
       }
     });
 
     const insight = document.getElementById("graph-insight");
     const summary = document.getElementById("graph-summary");
     insight.textContent = predictedYield > pastYield
-      ? "📈 Your predicted yield is higher than your past performance!"
+      ? `📈 Your predicted yield is higher with a ${yieldRate.toFixed(1)}% growth rate!`
       : predictedYield < pastYield
-      ? "⚠️ Predicted yield is lower. Consider optimizing."
-      : "🔍 Predicted yield matches last season.";
+      ? `⚠️ Predicted yield is lower with a ${yieldRate.toFixed(1)}% decline. Consider optimizing.`
+      : "🔍 Predicted yield matches last season with no growth.";
     summary.classList.remove("hidden");
   });
 
@@ -92,20 +139,36 @@ document.addEventListener("DOMContentLoaded", () => {
     const res = await fetch("/chain.json");
     const data = await res.json();
 
-    data.forEach(block => {
-      if (block.feature === "Crop Planner") {
-        const { input, output } = block.data;
-        const time = new Date(block.timestamp * 1000).toLocaleString();
+    const sampleData = [
+      { timestamp: "April 2, 2025", action: "Corn Plan", hash: "0x8a2c7b3e4f5..." },
+      { timestamp: "March 15, 2025", action: "Wheat Plan", hash: "0x9d4f2e1c3b7..." }
+    ];
+
+    const blockchainData = data.length ? data : sampleData;
+
+    blockchainData.forEach(block => {
+      if (block.feature === "Crop Planner" || !block.feature) {
+        const time = block.timestamp instanceof Date || typeof block.timestamp === "string"
+          ? new Date(block.timestamp).toLocaleString()
+          : new Date(block.timestamp * 1000).toLocaleString();
         const li = document.createElement("li");
-        li.textContent = `🕒 ${time} – ${input.crop} | ${input.area} acres | Yield: ${output.yield}`;
+        if (block.feature) {
+          const { input, output } = block.data;
+          li.textContent = `🕒 ${time} – ${input.crop} | ${input.area} acres | Yield: ${output.yield}`;
+        } else {
+          li.innerHTML = `${block.timestamp} - ${block.action} - <code class="bg-gray-100 p-1 rounded">${block.hash}</code> <span class="badge bg-success">Verified</span>`;
+        }
         list.appendChild(li);
       }
     });
 
-    document.getElementById("all-data-modal").classList.remove("hidden");
+    const modal = document.getElementById("all-data-modal");
+    modal.classList.toggle("hidden");
+    viewDataBtn.innerHTML = modal.classList.contains("hidden")
+      ? '<i class="fas fa-database me-1"></i> 📂 View Past Plans'
+      : '<i class="fas fa-eye-slash me-1"></i> Hide Past Plans';
   });
 
-  // Enhanced 3D Visualization with Fixed Growth Stages
   visualizeBtn.addEventListener("click", () => {
     const crop = document.getElementById("crop").value;
     const soil = document.getElementById("soil").value;
@@ -118,17 +181,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Show 3D container
     const container = document.getElementById("farm3d-container");
     container.classList.remove("hidden");
 
-    // Initialize Three.js
     const canvas = document.getElementById("farm3d");
-    if (!canvas) {
-      console.error("Canvas element 'farm3d' not found!");
-      return;
-    }
-
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
     renderer.setClearColor(0x87CEEB, 1);
@@ -137,7 +193,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     scene = new THREE.Scene();
 
-    // Skybox
     const skyboxGeo = new THREE.BoxGeometry(500, 500, 500);
     const skyboxMats = [
       new THREE.MeshBasicMaterial({ color: 0x87CEEB, side: THREE.BackSide }),
@@ -153,7 +208,6 @@ document.addEventListener("DOMContentLoaded", () => {
     camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
     camera.position.set(20, 10, 20);
 
-    // Lighting (no day/night cycle, so static lighting)
     const sun = new THREE.DirectionalLight(0xffffbb, 1.2);
     sun.position.set(10, 20, 10);
     sun.castShadow = true;
@@ -167,17 +221,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const hemisphereLight = new THREE.HemisphereLight(0x87CEEB, 0x5C4033, 0.3);
     scene.add(hemisphereLight);
 
-    // OrbitControls
-    if (!THREE.OrbitControls) {
-      console.error("OrbitControls not loaded!");
-      return;
-    }
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.1;
     controls.enableZoom = true;
 
-    // Ground with procedural texture
     const soilProperties = {
       Loamy: { color: 0x8B4513, roughness: 0.9, metalness: 0.1, bumpScale: 0.05, detailScale: 0.1 },
       Clay: { color: 0xB87333, roughness: 0.85, metalness: 0.15, bumpScale: 0.03, detailScale: 0.15 },
@@ -211,7 +259,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ground.userData = { type: "soil", name: soil };
     scene.add(ground);
 
-    // Irrigation lines
     const pipeGeo = new THREE.CylinderGeometry(0.05, 0.05, groundSize, 8);
     const pipeMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
     const pipes = [];
@@ -225,187 +272,38 @@ document.addEventListener("DOMContentLoaded", () => {
       pipes.push(pipe);
     }
 
-    // Crop models with enhanced realism and growth stages
     const cropCount = Math.min(50, Math.floor(area * 5));
     const rows = Math.ceil(Math.sqrt(cropCount));
     const spacing = groundSize / rows;
     const crops = [];
 
     const cropStyles = {
-      Wheat: {
-        type: "stalk",
-        height: 1.5,
-        width: 0.1,
-        color: 0xFFD700,
-        leafColor: 0x228B22,
-        leafCount: 4,
-        leafWidth: 0.3,
-        leafHeight: 0.1,
-        fruitHeight: 0.4,
-        fruitWidth: 0.2
-      },
-      Rice: {
-        type: "stalk",
-        height: 1.2,
-        width: 0.08,
-        color: 0x7CFC00,
-        leafColor: 0x228B22,
-        leafCount: 4,
-        leafWidth: 0.3,
-        leafHeight: 0.1,
-        fruitHeight: 0.3,
-        fruitWidth: 0.15
-      },
-      Corn: {
-        type: "stalk",
-        height: 2,
-        width: 0.15,
-        color: 0xFFFF99,
-        leafColor: 0x228B22,
-        leafCount: 6,
-        leafWidth: 0.4,
-        leafHeight: 0.15,
-        fruitHeight: 0.5,
-        fruitWidth: 0.2
-      },
-      Tomato: {
-        type: "bush",
-        height: 1,
-        width: 0.8,
-        color: 0xFF6347,
-        leafColor: 0x228B22,
-        leafCount: 5,
-        leafWidth: 0.3,
-        leafHeight: 0.1,
-        fruitHeight: 0.2,
-        fruitWidth: 0.2
-      },
-      Cucumber: {
-        type: "vine",
-        height: 0.5,
-        width: 0.3,
-        color: 0x006400,
-        leafColor: 0x228B22,
-        leafCount: 6,
-        leafWidth: 0.4,
-        leafHeight: 0.15,
-        fruitHeight: 0.6,
-        fruitWidth: 0.1
-      },
-      Sugarcane: {
-        type: "stalk",
-        height: 2.5,
-        width: 0.2,
-        color: 0x9ACD32,
-        leafColor: 0x228B22,
-        leafCount: 4,
-        leafWidth: 0.5,
-        leafHeight: 0.2,
-        fruitHeight: 0,
-        fruitWidth: 0
-      },
-      Lettuce: {
-        type: "bush",
-        height: 0.4,
-        width: 0.5,
-        color: 0x32CD32,
-        leafColor: 0x32CD32,
-        leafCount: 8,
-        leafWidth: 0.3,
-        leafHeight: 0.1,
-        fruitHeight: 0,
-        fruitWidth: 0
-      },
-      Carrot: {
-        type: "root",
-        height: 0.4,
-        width: 0.15,
-        color: 0xFF4500,
-        leafColor: 0x228B22,
-        leafCount: 8,
-        leafWidth: 0.2,
-        leafHeight: 0.3,
-        fruitHeight: 0,
-        fruitWidth: 0
-      },
-      Banana: {
-        type: "tree",
-        height: 2,
-        width: 0.2,
-        color: 0xFFFF00,
-        leafColor: 0x228B22,
-        leafCount: 4,
-        leafWidth: 0.5,
-        leafHeight: 0.2,
-        fruitHeight: 0.5,
-        fruitWidth: 0.1
-      }
+      Wheat: { type: "stalk", height: 1.5, width: 0.1, color: 0xFFD700, leafColor: 0x228B22, leafCount: 4, leafWidth: 0.3, leafHeight: 0.1, fruitHeight: 0.4, fruitWidth: 0.2 },
+      Rice: { type: "stalk", height: 1.2, width: 0.08, color: 0x7CFC00, leafColor: 0x228B22, leafCount: 4, leafWidth: 0.3, leafHeight: 0.1, fruitHeight: 0.3, fruitWidth: 0.15 },
+      Corn: { type: "stalk", height: 2, width: 0.15, color: 0xFFFF99, leafColor: 0x228B22, leafCount: 6, leafWidth: 0.4, leafHeight: 0.15, fruitHeight: 0.5, fruitWidth: 0.2 },
+      Tomato: { type: "bush", height: 1, width: 0.8, color: 0xFF6347, leafColor: 0x228B22, leafCount: 5, leafWidth: 0.3, leafHeight: 0.1, fruitHeight: 0.2, fruitWidth: 0.2 },
+      Cucumber: { type: "vine", height: 0.5, width: 0.3, color: 0x006400, leafColor: 0x228B22, leafCount: 6, leafWidth: 0.4, leafHeight: 0.15, fruitHeight: 0.6, fruitWidth: 0.1 },
+      Sugarcane: { type: "stalk", height: 2.5, width: 0.2, color: 0x9ACD32, leafColor: 0x228B22, leafCount: 4, leafWidth: 0.5, leafHeight: 0.2, fruitHeight: 0, fruitWidth: 0 },
+      Lettuce: { type: "bush", height: 0.4, width: 0.5, color: 0x32CD32, leafColor: 0x32CD32, leafCount: 8, leafWidth: 0.3, leafHeight: 0.1, fruitHeight: 0, fruitWidth: 0 },
+      Carrot: { type: "root", height: 0.4, width: 0.15, color: 0xFF4500, leafColor: 0x228B22, leafCount: 8, leafWidth: 0.2, leafHeight: 0.3, fruitHeight: 0, fruitWidth: 0 },
+      Banana: { type: "tree", height: 2, width: 0.2, color: 0xFFFF00, leafColor: 0x228B22, leafCount: 4, leafWidth: 0.5, leafHeight: 0.2, fruitHeight: 0.5, fruitWidth: 0.1 }
     };
 
-    // Define growth stages for each crop
     const growthStages = {
-      Wheat: {
-        Sprout: { heightScale: 0.3, leafCount: 2, fruit: false },
-        Growing: { heightScale: 0.6, leafCount: 3, fruit: false },
-        Mature: { heightScale: 1.0, leafCount: 4, fruit: true }
-      },
-      Rice: {
-        Sprout: { heightScale: 0.3, leafCount: 2, fruit: false },
-        Growing: { heightScale: 0.6, leafCount: 3, fruit: false },
-        Mature: { heightScale: 1.0, leafCount: 4, fruit: true }
-      },
-      Corn: {
-        Sprout: { heightScale: 0.3, leafCount: 2, fruit: false },
-        Growing: { heightScale: 0.6, leafCount: 4, fruit: false },
-        Mature: { heightScale: 1.0, leafCount: 6, fruit: true }
-      },
-      Tomato: {
-        Sprout: { heightScale: 0.3, leafCount: 2, fruit: false },
-        Growing: { heightScale: 0.6, leafCount: 3, fruit: true, fruitScale: 0.5 },
-        Mature: { heightScale: 1.0, leafCount: 5, fruit: true, fruitScale: 1.0 }
-      },
-      Cucumber: {
-        Sprout: { heightScale: 0.3, leafCount: 2, fruit: false },
-        Growing: { heightScale: 0.6, leafCount: 4, fruit: false },
-        Mature: { heightScale: 1.0, leafCount: 6, fruit: true }
-      },
-      Sugarcane: {
-        Sprout: { heightScale: 0.3, leafCount: 2, fruit: false },
-        Growing: { heightScale: 0.6, leafCount: 3, fruit: false },
-        Mature: { heightScale: 1.0, leafCount: 4, fruit: false }
-      },
-      Lettuce: {
-        Sprout: { heightScale: 0.3, leafCount: 3, fruit: false },
-        Growing: { heightScale: 0.6, leafCount: 5, fruit: false },
-        Mature: { heightScale: 1.0, leafCount: 8, fruit: false }
-      },
-      Carrot: {
-        Sprout: { heightScale: 0.3, leafCount: 3, fruit: false },
-        Growing: { heightScale: 0.6, leafCount: 5, fruit: false },
-        Mature: { heightScale: 1.0, leafCount: 8, fruit: true }
-      },
-      Banana: {
-        Sprout: { heightScale: 0.3, leafCount: 2, fruit: false },
-        Growing: { heightScale: 0.6, leafCount: 3, fruit: false },
-        Mature: { heightScale: 1.0, leafCount: 4, fruit: true }
-      }
+      Wheat: { Sprout: { heightScale: 0.3, leafCount: 2, fruit: false }, Growing: { heightScale: 0.6, leafCount: 3, fruit: false }, Mature: { heightScale: 1.0, leafCount: 4, fruit: true } },
+      Rice: { Sprout: { heightScale: 0.3, leafCount: 2, fruit: false }, Growing: { heightScale: 0.6, leafCount: 3, fruit: false }, Mature: { heightScale: 1.0, leafCount: 4, fruit: true } },
+      Corn: { Sprout: { heightScale: 0.3, leafCount: 2, fruit: false }, Growing: { heightScale: 0.6, leafCount: 4, fruit: false }, Mature: { heightScale: 1.0, leafCount: 6, fruit: true } },
+      Tomato: { Sprout: { heightScale: 0.3, leafCount: 2, fruit: false }, Growing: { heightScale: 0.6, leafCount: 3, fruit: true, fruitScale: 0.5 }, Mature: { heightScale: 1.0, leafCount: 5, fruit: true, fruitScale: 1.0 } },
+      Cucumber: { Sprout: { heightScale: 0.3, leafCount: 2, fruit: false }, Growing: { heightScale: 0.6, leafCount: 4, fruit: false }, Mature: { heightScale: 1.0, leafCount: 6, fruit: true } },
+      Sugarcane: { Sprout: { heightScale: 0.3, leafCount: 2, fruit: false }, Growing: { heightScale: 0.6, leafCount: 3, fruit: false }, Mature: { heightScale: 1.0, leafCount: 4, fruit: false } },
+      Lettuce: { Sprout: { heightScale: 0.3, leafCount: 3, fruit: false }, Growing: { heightScale: 0.6, leafCount: 5, fruit: false }, Mature: { heightScale: 1.0, leafCount: 8, fruit: false } },
+      Carrot: { Sprout: { heightScale: 0.3, leafCount: 3, fruit: false }, Growing: { heightScale: 0.6, leafCount: 5, fruit: false }, Mature: { heightScale: 1.0, leafCount: 8, fruit: true } },
+      Banana: { Sprout: { heightScale: 0.3, leafCount: 2, fruit: false }, Growing: { heightScale: 0.6, leafCount: 3, fruit: false }, Mature: { heightScale: 1.0, leafCount: 4, fruit: true } }
     };
 
-    const cropStyle = cropStyles[crop] || {
-      type: "stalk",
-      height: 1,
-      width: 0.1,
-      color: 0x32CD32,
-      leafColor: 0x228B22,
-      leafCount: 4,
-      leafWidth: 0.3,
-      leafHeight: 0.1,
-      fruitHeight: 0,
-      fruitWidth: 0
-    };
+    const cropStyle = cropStyles[crop] || { type: "stalk", height: 1, width: 0.1, color: 0x32CD32, leafColor: 0x228B22, leafCount: 4, leafWidth: 0.3, leafHeight: 0.1, fruitHeight: 0, fruitWidth: 0 };
     const cropColor = efficiency >= 95 ? cropStyle.color : efficiency >= 85 ? 0xFFD700 : 0xFF4500;
 
-    // Function to create custom leaf geometry with more realism
     const createLeafGeometry = (width, height, cropType) => {
       const leafShape = new THREE.Shape();
       if (cropType === "Corn" || cropType === "Sugarcane" || cropType === "Banana") {
@@ -426,25 +324,21 @@ document.addEventListener("DOMContentLoaded", () => {
       return new THREE.ShapeGeometry(leafShape);
     };
 
-    // Function to build a plant (used for initial creation and stage updates)
     const buildPlant = (plantGroup, crop, stage, cropStyle, efficiency) => {
       const stageProps = growthStages[crop][stage];
       const scaledHeight = cropStyle.height * stageProps.heightScale;
       const scaledWidth = cropStyle.width * stageProps.heightScale;
       const fruitScale = stageProps.fruitScale || 1.0;
 
-      // Clear existing children
       while (plantGroup.children.length > 0) {
         plantGroup.remove(plantGroup.children[0]);
       }
 
-      // Color variation
       const colorVariation = new THREE.Color(cropStyle.color);
       colorVariation.offsetHSL(0, (Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1);
       const leafColorVariation = new THREE.Color(cropStyle.leafColor);
       leafColorVariation.offsetHSL(0, (Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1);
 
-      // Build the plant based on type
       let plantMesh;
       if (cropStyle.type === "stalk") {
         const stalkGeo = new THREE.CylinderGeometry(scaledWidth, scaledWidth * 0.8, scaledHeight, 12);
@@ -563,7 +457,6 @@ document.addEventListener("DOMContentLoaded", () => {
       plantMesh.castShadow = true;
       plantGroup.add(plantMesh);
 
-      // Add leaves
       const leafGeo = createLeafGeometry(cropStyle.leafWidth, cropStyle.leafHeight, crop);
       const leafMat = new THREE.MeshStandardMaterial({
         color: leafColorVariation,
@@ -604,7 +497,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Add fruits if applicable
       if (stageProps.fruit) {
         if (crop === "Cucumber") {
           for (let j = 0; j < 4; j++) {
@@ -653,12 +545,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
 
-    // Build crops
     for (let i = 0; i < cropCount; i++) {
       const plantGroup = new THREE.Group();
       let currentStage = "Sprout";
 
-      // Initial build
       buildPlant(plantGroup, crop, currentStage, cropStyle, efficiency);
 
       const x = (i % rows - rows / 2) * spacing;
@@ -680,7 +570,6 @@ document.addEventListener("DOMContentLoaded", () => {
       scene.add(plantGroup);
     }
 
-    // Companion crops
     companions.forEach((companion, i) => {
       const compGeo = new THREE.SphereGeometry(0.4, 8, 8);
       const compMat = new THREE.MeshStandardMaterial({ color: 0xADFF2F });
@@ -691,27 +580,23 @@ document.addEventListener("DOMContentLoaded", () => {
       scene.add(compMesh);
     });
 
-    // UI Controls (positioned beside the canvas)
-    const uiContainer = document.createElement("div");
-    uiContainer.className = "absolute top-4 right-4 flex flex-col gap-2";
-    container.appendChild(uiContainer);
+    const uiContainer = document.querySelector("#farm3d-container .ui-controls");
+    uiContainer.className = "ui-controls flex flex-col gap-2";
 
     const createButton = (text, onClick) => {
       const btn = document.createElement("button");
       btn.textContent = text;
-      btn.className = "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700";
+      btn.className = "btn btn-sm btn-outline-primary rounded-pill px-4 py-2 text-center";
       btn.addEventListener("click", onClick);
       uiContainer.appendChild(btn);
       return btn;
     };
 
-    // Toggle Irrigation
     const irrigationBtn = createButton("Toggle Irrigation 💧", () => {
       pipes.forEach(pipe => (pipe.visible = !pipe.visible));
       irrigationBtn.textContent = pipes[0].visible ? "Hide Irrigation 🚫" : "Toggle Irrigation 💧";
     });
 
-    // Growth Stage Control
     let currentGrowthStage = "Sprout";
     const growthBtn = createButton("Next Growth Stage 🌱", () => {
       currentGrowthStage = currentGrowthStage === "Sprout" ? "Growing" : currentGrowthStage === "Growing" ? "Mature" : "Sprout";
@@ -719,7 +604,6 @@ document.addEventListener("DOMContentLoaded", () => {
       growthBtn.textContent = `Stage: ${currentGrowthStage} 🌱`;
     });
 
-    // Farm Overview (without soil type)
     const overviewBtn = createButton("Farm Overview 📊", () => {
       const totalYield = crops.reduce((sum, crop) => sum + crop.userData.yield, 0);
       const avgEfficiency = crops.reduce((sum, crop) => sum + crop.userData.efficiency, 0) / crops.length;
@@ -733,7 +617,6 @@ document.addEventListener("DOMContentLoaded", () => {
       );
     });
 
-    // Tooltips on hover (only for crops and companions)
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
     const tooltip = document.createElement("div");
@@ -764,13 +647,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Animation loop (removed sun animation and rain)
     let time = 0;
     function animate() {
       requestAnimationFrame(animate);
       time += 0.05;
 
-      // Animate crop sway
       crops.forEach(crop => {
         crop.rotation.y = Math.sin(time + crop.position.x) * 0.05;
         crop.position.y = Math.sin(time + crop.position.x) * 0.02;

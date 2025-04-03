@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, jsonify, send_file, make_response
-import json, hashlib, time, pdfkit, requests, random
+import json, hashlib, time, requests, random
 from flask_socketio import SocketIO, emit
 from sklearn.linear_model import LinearRegression
 import numpy as np
+from io import BytesIO
+
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 OPENWEATHER_KEY = "c51ef5af8ecbffc163bf9de5ed12587d"
 
 
@@ -89,6 +91,11 @@ def tips():
 @app.route("/reports")
 def reports():
     return render_template("reports.html")
+
+@app.route("/marketplace")
+def marketplace():
+    return render_template("marketplace.html")
+
 
 
 @app.route("/simulate", methods=["POST"])
@@ -314,7 +321,43 @@ def handle_connect():
 @socketio.on("disconnect")
 def handle_disconnect():
     print("Client disconnected")
+    
+    
+    
+@app.route("/buy", methods=["POST"])
+def buy_crop():
+    data = request.json
+    crop, qty, buyer = data["crop"], data["quantity"], data["buyer"]
+    # Send real-time order alert to farmer
+    socketio.emit("new_order", {"crop": crop, "qty": qty, "buyer": buyer})
+
+    # Create PDF receipt
+    html = f"""
+    <h1>Order Receipt</h1>
+    <p>Buyer: {buyer}</p>
+    <p>Crop: {crop}</p>
+    <p>Quantity: {qty} kg</p>
+    """
+    result = BytesIO()
+    pisa.CreatePDF(BytesIO(html.encode()), dest=result)
+    result.seek(0)
+
+    return send_file(result, download_name="receipt.pdf", as_attachment=True)
+
+@app.route("/generate_receipt", methods=["POST"])
+def generate_receipt():
+    data = request.json
+    html = f"""
+    <h1 style='color: green;'>TSA Marketplace Receipt</h1>
+    <p><strong>Buyer:</strong> {data['buyer']}</p>
+    <p><strong>Crop:</strong> {data['crop']}</p>
+    <p><strong>Quantity:</strong> {data['qty']} kg</p>
+    <p><strong>Price:</strong> ${data['price']} / kg</p>
+    <p><strong>Total:</strong> ${float(data['qty']) * float(data['price'])}</p>
+    """
+    pdf = HTML(string=html).write_pdf()
+    return send_file(BytesIO(pdf), download_name="receipt.pdf", as_attachment=True)
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, port=5000)
+    socketio.run(app, debug=True, port=5005)

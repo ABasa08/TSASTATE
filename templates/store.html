@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .crop-card { transition: all 0.3s ease; }
+        .crop-card:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+    <div class="container mx-auto p-6 max-w-4xl">
+        <!-- Header -->
+        <header class="mb-8 text-center">
+            <h1 id="storeTitle" class="text-4xl font-bold text-green-700">Loading Store...</h1>
+            <p class="text-gray-600 mt-2">Buy fresh crops directly from the farmer</p>
+        </header>
+
+        <!-- Crop List -->
+        <section id="cropList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const storeName = window.location.pathname.split('/').pop();
+            const cropList = document.getElementById('cropList');
+            const storeTitle = document.getElementById('storeTitle');
+
+            // Fetch store data from backend
+            fetch(`/store/${storeName}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Store not found');
+                    return response.json();
+                })
+                .then(data => {
+                    storeTitle.textContent = `${decodeURIComponent(data.storeName)}'s Store`;
+                    displayCrops(data.crops);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    storeTitle.textContent = 'Store Not Found';
+                    cropList.innerHTML = '<p class="text-red-500 text-center">Sorry, this marketplace doesn’t exist.</p>';
+                });
+
+            // Display crops
+            function displayCrops(crops) {
+                cropList.innerHTML = '';
+                crops.forEach(crop => {
+                    const cropCard = document.createElement('div');
+                    cropCard.className = 'crop-card bg-white p-4 rounded-lg shadow-md flex flex-col justify-between';
+                    cropCard.innerHTML = `
+                        <div>
+                            <h3 class="font-semibold text-lg text-gray-800">${crop.crop}</h3>
+                            <p class="text-gray-600">Price: $${crop.price.toFixed(2)}/kg</p>
+                            <p class="text-gray-600">Available: ${crop.quantity}kg</p>
+                        </div>
+                        <div class="mt-4">
+                            <input type="number" id="qty-${crop.crop}" min="1" max="${crop.quantity}" class="w-20 p-2 border border-gray-300 rounded-lg" placeholder="Qty">
+                            <button onclick="buyCrop('${crop.crop}', ${crop.price}, ${crop.quantity})" 
+                                    class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                Buy Now
+                            </button>
+                        </div>
+                    `;
+                    cropList.appendChild(cropCard);
+                });
+            }
+
+            // Buy Crop function
+            window.buyCrop = (cropName, price, maxQuantity) => {
+                const qtyInput = document.getElementById(`qty-${cropName}`);
+                const quantity = parseInt(qtyInput.value);
+
+                if (!quantity || quantity <= 0 || quantity > maxQuantity) {
+                    showAlert(`Please enter a valid quantity (1-${maxQuantity}kg)!`, 'error');
+                    return;
+                }
+
+                const total = (quantity * price).toFixed(2);
+                showAlert(`Order placed: ${quantity}kg of ${cropName} for $${total}!`, 'success');
+                // Simulate order (could send to backend here)
+                console.log('Order:', { storeName, cropName, quantity, total });
+            };
+
+            // Alert/Toast
+            function showAlert(message, type) {
+                const alert = document.createElement('div');
+                alert.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white ${
+                    type === 'success' ? 'bg-green-500' : 'bg-red-500'
+                }`;
+                alert.textContent = message;
+                document.body.appendChild(alert);
+                setTimeout(() => alert.remove(), 3000);
+            }
+        });
+    </script>
+</body>
+</html>
