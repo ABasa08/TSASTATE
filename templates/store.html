@@ -1,100 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farm Store</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        .crop-card { transition: all 0.3s ease; }
-        .crop-card:hover { transform: scale(1.05); }
-    </style>
+  <meta charset="UTF-8" />
+  <title>🌾 {{ store_name | capitalize }} - Marketplace</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 </head>
-<body class="bg-gray-50 min-h-screen font-sans">
-    <div class="container mx-auto p-6 max-w-4xl">
-        <!-- Header -->
-        <header class="mb-8 text-center">
-            <h1 id="storeTitle" class="text-4xl font-bold text-green-700">Loading Store...</h1>
-            <p class="text-gray-600 mt-2">Buy fresh crops directly from the farmer</p>
-        </header>
+<body class="bg-green-50 font-sans min-h-screen">
+  <div class="max-w-4xl mx-auto p-6">
+    <h1 class="text-3xl font-bold text-green-700 mb-4">🛒 {{ store_name | capitalize }} Marketplace</h1>
+    <p class="mb-6 text-gray-600">Buy fresh crops directly from the farmer</p>
 
-        <!-- Crop List -->
-        <section id="cropList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></section>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      {% for crop in crops %}
+      <div class="bg-white p-4 rounded-xl shadow border border-green-200">
+        <h2 class="text-xl font-semibold text-green-800">{{ crop.crop }}</h2>
+        <p class="text-sm text-gray-700">💲 Price: ${{ crop.price }}/kg</p>
+        <p class="text-sm text-gray-700">📦 Available: {{ crop.quantity }} kg</p>
+        <div class="mt-3 space-y-2">
+          <input type="number" min="1" max="{{ crop.quantity }}" class="qty border p-2 w-24 rounded" placeholder="Qty">
+          <input type="text" class="buyer border p-2 w-40 rounded" placeholder="Your Name">
+          <button class="buy-btn bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700"
+                  data-crop="{{ crop.crop }}"
+                  data-price="{{ crop.price }}"
+                  data-store="{{ store_name | lower }}">
+            🛍️ Buy
+          </button>
+        </div>
+      </div>
+      {% endfor %}
     </div>
+  </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const storeName = window.location.pathname.split('/').pop();
-            const cropList = document.getElementById('cropList');
-            const storeTitle = document.getElementById('storeTitle');
+  <script>
+    const socket = io();  // Realtime connection
 
-            // Fetch store data from backend
-            fetch(`/store/${storeName}`)
-                .then(response => {
-                    if (!response.ok) throw new Error('Store not found');
-                    return response.json();
-                })
-                .then(data => {
-                    storeTitle.textContent = `${decodeURIComponent(data.storeName)}'s Store`;
-                    displayCrops(data.crops);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    storeTitle.textContent = 'Store Not Found';
-                    cropList.innerHTML = '<p class="text-red-500 text-center">Sorry, this marketplace doesn’t exist.</p>';
-                });
+    document.querySelectorAll(".buy-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const parent = btn.closest("div");
+        const crop = btn.dataset.crop;
+        const price = parseFloat(btn.dataset.price);
+        const store = btn.dataset.store;
+        const qty = parseInt(parent.querySelector(".qty").value);
+        const buyer = parent.querySelector(".buyer").value.trim();
 
-            // Display crops
-            function displayCrops(crops) {
-                cropList.innerHTML = '';
-                crops.forEach(crop => {
-                    const cropCard = document.createElement('div');
-                    cropCard.className = 'crop-card bg-white p-4 rounded-lg shadow-md flex flex-col justify-between';
-                    cropCard.innerHTML = `
-                        <div>
-                            <h3 class="font-semibold text-lg text-gray-800">${crop.crop}</h3>
-                            <p class="text-gray-600">Price: $${crop.price.toFixed(2)}/kg</p>
-                            <p class="text-gray-600">Available: ${crop.quantity}kg</p>
-                        </div>
-                        <div class="mt-4">
-                            <input type="number" id="qty-${crop.crop}" min="1" max="${crop.quantity}" class="w-20 p-2 border border-gray-300 rounded-lg" placeholder="Qty">
-                            <button onclick="buyCrop('${crop.crop}', ${crop.price}, ${crop.quantity})" 
-                                    class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                                Buy Now
-                            </button>
-                        </div>
-                    `;
-                    cropList.appendChild(cropCard);
-                });
-            }
+        if (!qty || !buyer || qty <= 0) {
+          alert("⚠️ Please enter a valid quantity and your name.");
+          return;
+        }
 
-            // Buy Crop function
-            window.buyCrop = (cropName, price, maxQuantity) => {
-                const qtyInput = document.getElementById(`qty-${cropName}`);
-                const quantity = parseInt(qtyInput.value);
+        const total = (price * qty).toFixed(2);
 
-                if (!quantity || quantity <= 0 || quantity > maxQuantity) {
-                    showAlert(`Please enter a valid quantity (1-${maxQuantity}kg)!`, 'error');
-                    return;
-                }
-
-                const total = (quantity * price).toFixed(2);
-                showAlert(`Order placed: ${quantity}kg of ${cropName} for $${total}!`, 'success');
-                // Simulate order (could send to backend here)
-                console.log('Order:', { storeName, cropName, quantity, total });
-            };
-
-            // Alert/Toast
-            function showAlert(message, type) {
-                const alert = document.createElement('div');
-                alert.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white ${
-                    type === 'success' ? 'bg-green-500' : 'bg-red-500'
-                }`;
-                alert.textContent = message;
-                document.body.appendChild(alert);
-                setTimeout(() => alert.remove(), 3000);
-            }
+        const res = await fetch("/buy", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ crop, qty, buyer, price, store })
         });
-    </script>
+
+        if (!res.ok) {
+          alert("❌ Purchase failed. Please try again.");
+          return;
+        }
+
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "receipt.pdf";
+        link.click();
+
+        alert(`✅ Thank you ${buyer}! You bought ${qty}kg of ${crop}. Receipt downloaded.`);
+      });
+    });
+
+    // Real-time farmer alert (you can also remove this for customers)
+    socket.on("new_order", (data) => {
+      const popup = document.createElement("div");
+      popup.className = "fixed top-5 right-5 bg-green-600 text-white px-5 py-3 rounded shadow z-50 animate-pulse";
+      popup.innerHTML = `
+        <strong>📢 New Order!</strong><br>
+        ${data.buyer} bought ${data.qty}kg of ${data.crop}<br>
+        💰 You earned $${parseFloat(data.total).toFixed(2)}
+      `;
+      document.body.appendChild(popup);
+      setTimeout(() => popup.remove(), 6000);
+    });
+  </script>
 </body>
 </html>

@@ -42,15 +42,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const tipBox = document.getElementById("smart-tip");
     tipBox.innerHTML = `💬 <strong>Tip:</strong><br>${tip.replace(/\n/g, "<br>")}`;
-    tipBox.classList.add("text-green-700", "whitespace-pre-line");
 
     const ecoEl = document.getElementById("eco-tip");
     ecoEl.innerHTML = `🌿 <strong>Eco Tip:</strong><br>${eco_tip.replace(/\n/g, "<br>")}`;
-    ecoEl.classList.add("text-green-700", "whitespace-pre-line");
 
     const matchEl = document.getElementById("soil-crop-match");
     matchEl.innerText = `🧪 Soil-Crop Match: ${match}`;
     matchEl.className = "font-semibold whitespace-pre-line";
+    matchEl.classList.remove("text-green-600", "text-yellow-500", "text-red-500");
     matchEl.classList.add(
       match === "Excellent" ? "text-green-600" :
       match === "Okay" ? "text-yellow-500" :
@@ -153,12 +152,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const logs = await res.json();
     const list = document.getElementById("log-list");
     list.innerHTML = "";
-  
+
     if (!logs.length) {
       list.innerHTML = "<li class='text-gray-500 italic'>No past simulations found.</li>";
       return;
     }
-  
+
     logs
       .filter(log => log.input && log.output)
       .slice(-5)
@@ -169,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const irrigation = log.input.irrigation || "N/A";
         const score = log.output.score || "N/A";
         const badge = log.output.badge || "";
-  
+
         const item = document.createElement("li");
         item.className = "text-sm text-gray-800 bg-blue-50 border rounded p-2";
         item.innerHTML = `
@@ -180,9 +179,8 @@ document.addEventListener("DOMContentLoaded", () => {
         list.appendChild(item);
       });
   });
-  
 
-  fixBtn.addEventListener("click", () => {
+  fixBtn.addEventListener("click", async () => {
     const crop = document.getElementById("crop").value;
     const location = document.getElementById("location").value;
     const area = parseFloat(document.getElementById("area").value);
@@ -206,10 +204,22 @@ document.addEventListener("DOMContentLoaded", () => {
       location
     };
 
-    // Show Optimized Message
-    document.getElementById("conservation-score").innerText = "🌿 Score: 95% (High) ✅ Optimized";
-    document.getElementById("badge").innerText = "🥇 Badge: 🟩 Excellent";
+    // Re-run with optimized setup
+    await runSimulation(optimizedInput);
 
-    runSimulation(optimizedInput);
+    // Log to blockchain
+    await fetch("/log-fix", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        crop,
+        area,
+        location,
+        irrigation: suggestion.irrigation,
+        soil: suggestion.soil
+      })
+    });
+
+    alert("🛠️ Fix applied! Your simulation was optimized with ideal inputs.");
   });
 });

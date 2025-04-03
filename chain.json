@@ -1,102 +1,80 @@
 [
   {
     "index": 0,
-    "timestamp": 1743644532.3916469,
+    "timestamp": 1743646737.376601,
     "feature": "Genesis",
     "data": "Initial block",
     "prev_hash": "0",
-    "hash": "91fc84e14e9ea186bf6e302b88c029d28a7c2b3ec984636b5d9aaba59420db30"
+    "hash": "ae1fd237f1b66744fb8cb6755ebf59db9b8230b8b5a59dcc380f2cf3e6f94e2e"
   },
   {
     "index": 1,
-    "timestamp": 1743644679.308909,
-    "feature": "Crop Planner",
-    "data": {
-      "input": {
-        "crop": "Lettuce",
-        "soil": "Silty",
-        "area": "30",
-        "yield": 1,
-        "date": "2025-04-02T07:00:00.000Z"
-      },
-      "output": {
-        "yield": "1.1 tons",
-        "companions": [
-          "Chives",
-          "Carrot"
-        ],
-        "tip": "Harvest early for best taste."
-      }
-    },
-    "prev_hash": "91fc84e14e9ea186bf6e302b88c029d28a7c2b3ec984636b5d9aaba59420db30",
-    "hash": "e2c1168e644db6220c908ae86f53b83f11efa2e3b7b060087befae0aa4d9700b"
-  },
-  {
-    "index": 2,
-    "timestamp": 1743644702.2729778,
+    "timestamp": 1743646755.645662,
     "feature": "Water Simulation",
     "data": {
       "input": {
-        "irrigation": "Drip",
-        "soil": "Silty",
+        "irrigation": "Flood",
+        "soil": "Clay",
         "crop": "Sugarcane",
-        "area": 12,
+        "area": 15,
         "unit": "acres",
         "location": "Seattle"
       },
       "output": {
-        "used_liters": 7560.0,
-        "used_gallons": 1997.1,
-        "saved_liters": 10440.0,
-        "saved_gallons": 2758.0,
-        "score": 58.0,
-        "badge": "\ud83d\udfe8 Moderate",
+        "used_liters": 13387.5,
+        "used_gallons": 3536.6,
+        "saved_liters": 9112.5,
+        "saved_gallons": 2407.3,
+        "score": 40.5,
+        "badge": "\ud83d\udfe5 Poor",
         "weather": {
-          "temp": 9.98,
-          "humidity": 74,
+          "temp": 9.33,
+          "humidity": 78,
           "desc": "Light Rain",
           "rain": true
         },
         "alerts": [
-          "\ud83c\udf27\ufe0f Rain expected in next 24hr \u2013 reduce irrigation."
+          "\ud83c\udf27\ufe0f Rain expected in next 24hr \u2013 reduce irrigation.",
+          "\ud83d\udca7 High humidity \u2013 reduce water slightly."
         ],
         "tip": "\u26a0\ufe0f To improve your Sugarcane yield:\n\u2022 Switch irrigation to Flood\n\u2022 Use Silty soil for better root absorption",
         "eco_tip": "\ud83d\udca7 Rain expected \u2013 save water:\n\u2022 Set up rain barrels\n\u2022 Skip tomorrow\u2019s irrigation schedule",
         "rainAlert": true,
-        "match": "Okay"
+        "match": "Poor"
       }
     },
-    "prev_hash": "e2c1168e644db6220c908ae86f53b83f11efa2e3b7b060087befae0aa4d9700b",
-    "hash": "fa8843e2691b5bc3920d3a8ff5ef2b174d2ffc248b8746e71657017eba8d0ef4"
+    "prev_hash": "ae1fd237f1b66744fb8cb6755ebf59db9b8230b8b5a59dcc380f2cf3e6f94e2e",
+    "hash": "97898e6df73d00067bcbafaa1d1eb3a175fcd4749b92f617295a816f2c9197f4"
   },
   {
-    "index": 3,
-    "timestamp": 1743644704.5441978,
+    "index": 2,
+    "timestamp": 1743646759.077921,
     "feature": "Water Simulation",
     "data": {
       "input": {
         "irrigation": "Flood",
         "soil": "Silty",
         "crop": "Sugarcane",
-        "area": 12,
+        "area": 15,
         "unit": "acres",
         "location": "Seattle"
       },
       "output": {
-        "used_liters": 12600.0,
-        "used_gallons": 3328.6,
-        "saved_liters": 5400.0,
-        "saved_gallons": 1426.5,
-        "score": 30.0,
+        "used_liters": 13387.5,
+        "used_gallons": 3536.6,
+        "saved_liters": 9112.5,
+        "saved_gallons": 2407.3,
+        "score": 40.5,
         "badge": "\ud83d\udfe5 Poor",
         "weather": {
-          "temp": 9.98,
-          "humidity": 74,
+          "temp": 9.33,
+          "humidity": 78,
           "desc": "Light Rain",
           "rain": true
         },
         "alerts": [
-          "\ud83c\udf27\ufe0f Rain expected in next 24hr \u2013 reduce irrigation."
+          "\ud83c\udf27\ufe0f Rain expected in next 24hr \u2013 reduce irrigation.",
+          "\ud83d\udca7 High humidity \u2013 reduce water slightly."
         ],
         "tip": "\u2705 Your setup is optimized for Sugarcane.\n\u2022 Flood irrigation supports water efficiency\n\u2022 Silty soil enhances nutrient retention for better yield",
         "eco_tip": "\ud83d\udca7 Rain expected \u2013 save water:\n\u2022 Set up rain barrels\n\u2022 Skip tomorrow\u2019s irrigation schedule",
@@ -104,7 +82,123 @@
         "match": "Excellent"
       }
     },
-    "prev_hash": "fa8843e2691b5bc3920d3a8ff5ef2b174d2ffc248b8746e71657017eba8d0ef4",
-    "hash": "ffae62d960a059c53e723e88c47a1c54ac49b7d6b4e6cb198710160524fecc8a"
+    "prev_hash": "97898e6df73d00067bcbafaa1d1eb3a175fcd4749b92f617295a816f2c9197f4",
+    "hash": "40497c3451cdb65dd4e5907c46a0d8092edaf50c5ed0538d268382eef595a30c"
+  },
+  {
+    "index": 3,
+    "timestamp": 1743646759.092541,
+    "feature": "FixSuggestion",
+    "data": {
+      "input": {
+        "crop": "Sugarcane",
+        "area": 15,
+        "location": "Seattle"
+      },
+      "suggested": {
+        "irrigation": "Flood",
+        "soil": "Silty"
+      },
+      "timestamp": 1743646759.092538
+    },
+    "prev_hash": "40497c3451cdb65dd4e5907c46a0d8092edaf50c5ed0538d268382eef595a30c",
+    "hash": "10554bdba7c8dd3e4e3a8c117dba57d30c8016de811ea0ed6a0a9ea5a685e587"
+  },
+  {
+    "index": 4,
+    "timestamp": 1743647091.124108,
+    "feature": "Water Simulation",
+    "data": {
+      "input": {
+        "irrigation": "Flood",
+        "soil": "Sandy",
+        "crop": "Carrot",
+        "area": 14,
+        "unit": "acres",
+        "location": "Seattle"
+      },
+      "output": {
+        "used_liters": 2332.4,
+        "used_gallons": 616.2,
+        "saved_liters": 1587.6,
+        "saved_gallons": 419.4,
+        "score": 40.5,
+        "badge": "\ud83d\udfe5 Poor",
+        "weather": {
+          "temp": 9.33,
+          "humidity": 78,
+          "desc": "Light Rain",
+          "rain": true
+        },
+        "alerts": [
+          "\ud83c\udf27\ufe0f Rain expected in next 24hr \u2013 reduce irrigation.",
+          "\ud83d\udca7 High humidity \u2013 reduce water slightly."
+        ],
+        "tip": "\u26a0\ufe0f To improve your Carrot yield:\n\u2022 Switch irrigation to Drip\n\u2022 Use Loamy soil for better root absorption",
+        "eco_tip": "\ud83d\udca7 Rain expected \u2013 save water:\n\u2022 Set up rain barrels\n\u2022 Skip tomorrow\u2019s irrigation schedule",
+        "rainAlert": true,
+        "match": "Poor"
+      }
+    },
+    "prev_hash": "10554bdba7c8dd3e4e3a8c117dba57d30c8016de811ea0ed6a0a9ea5a685e587",
+    "hash": "35261049b09f6ca55c67a7518473ac84eedb17582ffa1b4fc58e91c22253ed13"
+  },
+  {
+    "index": 5,
+    "timestamp": 1743647093.558975,
+    "feature": "Water Simulation",
+    "data": {
+      "input": {
+        "irrigation": "Drip",
+        "soil": "Loamy",
+        "crop": "Carrot",
+        "area": 14,
+        "unit": "acres",
+        "location": "Seattle"
+      },
+      "output": {
+        "used_liters": 1399.4,
+        "used_gallons": 369.7,
+        "saved_liters": 2520.6,
+        "saved_gallons": 665.9,
+        "score": 64.3,
+        "badge": "\ud83d\udfe8 Moderate",
+        "weather": {
+          "temp": 9.33,
+          "humidity": 78,
+          "desc": "Light Rain",
+          "rain": true
+        },
+        "alerts": [
+          "\ud83c\udf27\ufe0f Rain expected in next 24hr \u2013 reduce irrigation.",
+          "\ud83d\udca7 High humidity \u2013 reduce water slightly."
+        ],
+        "tip": "\u2705 Your setup is optimized for Carrot.\n\u2022 Drip irrigation supports water efficiency\n\u2022 Loamy soil enhances nutrient retention for better yield",
+        "eco_tip": "\ud83d\udca7 Rain expected \u2013 save water:\n\u2022 Set up rain barrels\n\u2022 Skip tomorrow\u2019s irrigation schedule",
+        "rainAlert": true,
+        "match": "Excellent"
+      }
+    },
+    "prev_hash": "35261049b09f6ca55c67a7518473ac84eedb17582ffa1b4fc58e91c22253ed13",
+    "hash": "a27ba102aaaa4ef01df400e3cb8bcb5705be0753384fc4dc38a4e6899bea97ec"
+  },
+  {
+    "index": 6,
+    "timestamp": 1743647093.573526,
+    "feature": "FixSuggestion",
+    "data": {
+      "input": {
+        "crop": "Carrot",
+        "area": 14,
+        "location": "Seattle"
+      },
+      "suggested": {
+        "irrigation": "Drip",
+        "soil": "Loamy"
+      },
+      "timestamp": 1743647093.5735219
+    },
+    "prev_hash": "a27ba102aaaa4ef01df400e3cb8bcb5705be0753384fc4dc38a4e6899bea97ec",
+    "hash": "33e5ecc540dd1378adf85ad6dc68fa5cfe8102c8ea76623b5b71e7a8fc521ab0"
   }
 ]

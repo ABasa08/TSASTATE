@@ -4,6 +4,8 @@ from flask_socketio import SocketIO, emit
 from sklearn.linear_model import LinearRegression
 import numpy as np
 from io import BytesIO
+from flask import Flask, render_template, request, jsonify, send_file, make_response
+import os, json, hashlib, time, requests, random
 
 
 app = Flask(__name__)
@@ -327,22 +329,61 @@ def handle_disconnect():
 @app.route("/buy", methods=["POST"])
 def buy_crop():
     data = request.json
-    crop, qty, buyer = data["crop"], data["quantity"], data["buyer"]
-    # Send real-time order alert to farmer
-    socketio.emit("new_order", {"crop": crop, "qty": qty, "buyer": buyer})
+    crop = data["crop"]
+    qty = int(data["qty"])
+    buyer = data["buyer"]
+    price = float(data["price"])
+    store = data.get("store")
 
-    # Create PDF receipt
-    html = f"""
-    <h1>Order Receipt</h1>
-    <p>Buyer: {buyer}</p>
-    <p>Crop: {crop}</p>
-    <p>Quantity: {qty} kg</p>
+    if not store:
+        return jsonify({"error": "Missing store name"}), 400
+
+    order = {
+        "crop": crop,
+        "quantity": qty,
+        "buyer": buyer,
+        "price": price,
+        "total": round(qty * price, 2),
+        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+    # Save to orders/{store}.json
+    os.makedirs("orders", exist_ok=True)
+    order_file = f"orders/{store.lower()}.json"
+    if os.path.exists(order_file):
+        with open(order_file, "r") as f:
+            existing = json.load(f)
+    else:
+        existing = []
+
+    existing.append(order)
+    with open(order_file, "w") as f:
+        json.dump(existing, f, indent=2)
+
+    # Notify farmer in real-time
+    socketio.emit("new_order", {
+        "crop": crop,
+        "qty": qty,
+        "buyer": buyer,
+        "total": qty * price
+    })
+
+    # Return dummy receipt
+    receipt_html = f"""
+    <h1>TSA Order Receipt</h1>
+    <p><strong>Buyer:</strong> {buyer}</p>
+    <p><strong>Crop:</strong> {crop}</p>
+    <p><strong>Quantity:</strong> {qty}kg</p>
+    <p><strong>Price:</strong> ${price}/kg</p>
+    <p><strong>Total:</strong> ${qty * price}</p>
     """
     result = BytesIO()
-    pisa.CreatePDF(BytesIO(html.encode()), dest=result)
+    pisa.CreatePDF(BytesIO(receipt_html.encode()), dest=result)
     result.seek(0)
-
     return send_file(result, download_name="receipt.pdf", as_attachment=True)
+
+
+
 
 @app.route("/generate_receipt", methods=["POST"])
 def generate_receipt():
@@ -357,6 +398,41 @@ def generate_receipt():
     """
     pdf = HTML(string=html).write_pdf()
     return send_file(BytesIO(pdf), download_name="receipt.pdf", as_attachment=True)
+
+
+@app.route("/marketplace/save", methods=["POST"])
+def save_marketplace():
+    data = request.json
+    store_name = data["storeName"]
+    crops = data["crops"]
+
+    os.makedirs("marketplaces", exist_ok=True)
+    with open(f"marketplaces/{store_name.lower()}.json", "w") as f:
+        json.dump(crops, f, indent=2)
+
+    return jsonify({"status": "saved"})
+
+
+@app.route("/marketplace/view/<storename>")
+def view_marketplace(storename):
+    store_file = f"marketplaces/{storename.lower()}.json"  # ✅ correct path
+    if not os.path.exists(store_file):
+        return render_template("store_not_found.html", store=storename)
+
+    with open(store_file) as f:
+        data = json.load(f)
+    return render_template("store.html", store_name=storename, crops=data)
+
+
+@app.route("/marketplace/orders/<storename>")
+def view_orders(storename):
+    path = f"orders/{storename.lower()}.json"
+    if not os.path.exists(path):
+        return jsonify([])
+
+    with open(path) as f:
+        orders = json.load(f)
+    return jsonify(orders)
 
 
 if __name__ == "__main__":

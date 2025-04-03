@@ -1,191 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farm Marketplace Creator</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        .crop-card { transition: all 0.3s ease; }
-        .crop-card:hover { transform: scale(1.05); }
-        .publish-btn { transition: background-color 0.3s ease; }
-    </style>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Farm Marketplace Creator</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <style>
+    .crop-card { transition: all 0.3s ease; }
+    .crop-card:hover { transform: scale(1.05); }
+    .publish-btn { transition: background-color 0.3s ease; }
+  </style>
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 </head>
+<body class="bg-gray-50 font-sans">
 
-<nav class="bg-white shadow sticky top-0 z-50">
+  <!-- Navbar -->
+  <nav class="bg-white shadow sticky top-0 z-50">
     <div class="container mx-auto flex justify-between items-center py-4 px-6">
       <h1 class="text-2xl font-bold text-green-700">🌿 TSA</h1>
       <ul class="flex gap-5 font-medium text-sm">
         <li><a href="/" class="hover:text-green-600">Home</a></li>
         <li><a href="/planner" class="hover:text-green-600">Planner</a></li>
         <li><a href="/water" class="hover:text-green-600">Water</a></li>
-        <li><a href="/dashboard" class="hover:text-green-600">Dashboard</a></li>
-        <li><a href="/tips" class="hover:text-green-600">Tips</a></li>
-        <li><a href="/reports" class="hover:text-green-600">Reports</a></li>
-        <li><a href="/marketplace" class="hover:text-green-600">Marketplace</a></li>
+        <li><a href="/marketplace" class="text-green-600 font-semibold">Marketplace</a></li>
       </ul>
-      
     </div>
   </nav>
 
-<body class="bg-gray-50 min-h-screen font-sans">
-    <div class="container mx-auto p-6 max-w-4xl">
-        <!-- Header -->
-        <header class="mb-8 text-center">
-            <h1 class="text-4xl font-bold text-green-700">Farm Marketplace Creator</h1>
-            <p class="text-gray-600 mt-2">Build your sustainable marketplace in minutes</p>
-        </header>
+  <!-- Main Container -->
+  <div class="container mx-auto p-6 max-w-4xl">
+    <!-- Header -->
+    <header class="mb-8 text-center">
+      <h1 class="text-4xl font-bold text-green-700">Farm Marketplace Creator</h1>
+      <p class="text-gray-600 mt-2">Build your sustainable marketplace in minutes</p>
+    </header>
 
-        <!-- Store Name Section -->
-        <section class="mb-8 bg-white p-6 rounded-xl shadow-md">
-            <label for="storeName" class="block text-lg font-semibold text-gray-800 mb-2">Marketplace Name</label>
-            <input id="storeName" type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="e.g., SunnyFields Farm">
-        </section>
+    <!-- Marketplace Name -->
+    <section class="mb-8 bg-white p-6 rounded-xl shadow-md">
+      <label for="storeName" class="block text-lg font-semibold text-gray-800 mb-2">Marketplace Name</label>
+      <input id="storeName" type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="e.g., SunnyFields Farm" />
+    </section>
 
-        <!-- Crop Input Section -->
-        <section class="mb-8 bg-white p-6 rounded-xl shadow-md">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Add Your Crops</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <select id="cropSelect" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
-                    <option value="">Select Crop</option>
-                    <option value="Wheat">Wheat</option>
-                    <option value="Rice">Rice</option>
-                    <option value="Corn">Corn</option>
-                    <option value="Tomatoes">Tomatoes</option>
-                    <option value="Potatoes">Potatoes</option>
-                </select>
-                <input id="price" type="number" step="0.01" min="0" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Price per kg ($)">
-                <input id="quantity" type="number" min="0" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Quantity (kg)">
-            </div>
-            <button id="addCrop" class="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">Add Crop</button>
-        </section>
+    <!-- Crop Input -->
+    <section class="mb-8 bg-white p-6 rounded-xl shadow-md">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Add Your Crops</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <select id="cropSelect" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+          <option value="">Select Crop</option>
+          <option value="Wheat">Wheat</option>
+          <option value="Rice">Rice</option>
+          <option value="Corn">Corn</option>
+          <option value="Tomatoes">Tomatoes</option>
+          <option value="Potatoes">Potatoes</option>
+        </select>
+        <input id="price" type="number" step="0.01" min="0" class="p-3 border border-gray-300 rounded-lg" placeholder="Price per kg ($)" />
+        <input id="quantity" type="number" min="0" class="p-3 border border-gray-300 rounded-lg" placeholder="Quantity (kg)" />
+      </div>
+      <button id="addCrop" class="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">➕ Add Crop</button>
+    </section>
 
-        <!-- Crop Preview Section -->
-        <section id="cropPreview" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8"></section>
+    <!-- Crop Preview -->
+    <section id="cropPreview" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8"></section>
 
-        <!-- Publish Section -->
-        <section class="text-center">
-            <button id="publishBtn" class="publish-btn bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 text-lg font-semibold">Publish Marketplace</button>
-            <div id="shareLink" class="mt-6 hidden">
-                <p class="text-gray-700 mb-2">Share your marketplace:</p>
-                <div class="flex justify-center items-center gap-2">
-                    <input id="linkInput" type="text" class="p-2 border border-gray-300 rounded-lg w-80 bg-gray-100" readonly>
-                    <button id="copyLink" class="bg-gray-200 p-2 rounded-lg hover:bg-gray-300">Copy</button>
-                </div>
-            </div>
-        </section>
-    </div>
+    <!-- Publish -->
+    <section class="text-center">
+      <button id="publishBtn" class="publish-btn bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 text-lg font-semibold">🚀 Publish Marketplace</button>
+      <button id="viewBuyersBtn" class="bg-yellow-500 text-white px-6 py-2 rounded-lg hover:bg-yellow-600 ml-4">📧 View Buyers</button>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const crops = [];
+      <div id="shareLink" class="mt-6 hidden">
+        <p class="text-gray-700 mb-2">Share your marketplace:</p>
+        <div class="flex justify-center items-center gap-2">
+          <input id="linkInput" type="text" class="p-2 border border-gray-300 rounded-lg w-80 bg-gray-100" readonly />
+          <button id="copyLink" class="bg-gray-200 p-2 rounded-lg hover:bg-gray-300">📋 Copy</button>
+        </div>
+      </div>
+    </section>
+  </div>
 
-            // DOM Elements
-            const cropSelect = document.getElementById('cropSelect');
-            const priceInput = document.getElementById('price');
-            const quantityInput = document.getElementById('quantity');
-            const storeNameInput = document.getElementById('storeName');
-            const previewSection = document.getElementById('cropPreview');
-            const shareLinkSection = document.getElementById('shareLink');
-            const linkInput = document.getElementById('linkInput');
-            const addCropBtn = document.getElementById('addCrop');
-            const publishBtn = document.getElementById('publishBtn');
-            const copyLinkBtn = document.getElementById('copyLink');
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const crops = [];
+      const socket = io();
 
-            // Add Crop
-            addCropBtn.addEventListener('click', () => {
-                const crop = cropSelect.value;
-                const price = parseFloat(priceInput.value);
-                const quantity = parseInt(quantityInput.value);
+      const cropSelect = document.getElementById('cropSelect');
+      const priceInput = document.getElementById('price');
+      const quantityInput = document.getElementById('quantity');
+      const storeNameInput = document.getElementById('storeName');
+      const previewSection = document.getElementById('cropPreview');
+      const shareLinkSection = document.getElementById('shareLink');
+      const linkInput = document.getElementById('linkInput');
+      const addCropBtn = document.getElementById('addCrop');
+      const publishBtn = document.getElementById('publishBtn');
+      const copyLinkBtn = document.getElementById('copyLink');
+      const viewBuyersBtn = document.getElementById('viewBuyersBtn');
 
-                if (!crop || price <= 0 || quantity <= 0 || isNaN(price) || isNaN(quantity)) {
-                    showAlert('Please fill all fields with valid values!', 'error');
-                    return;
-                }
+      // Realtime alert from server (order notification)
+      socket.on("new_order", (data) => {
+        const currentStore = storeNameInput.value.trim().toLowerCase();
+        if (data.store === currentStore) {
+          showAlert(`🛒 ${data.buyer} bought ${data.qty}kg of ${data.crop} – $${data.total}`, 'success');
+        }
+      });
 
-                crops.push({ crop, price, quantity });
-                updatePreview();
-                clearForm();
-                showAlert('Crop added successfully!', 'success');
-            });
+      // Add Crop
+      addCropBtn.addEventListener('click', () => {
+        const crop = cropSelect.value;
+        const price = parseFloat(priceInput.value);
+        const quantity = parseInt(quantityInput.value);
 
-            // Update Preview
-            function updatePreview() {
-                previewSection.innerHTML = '';
-                crops.forEach((item, index) => {
-                    const cropCard = document.createElement('div');
-                    cropCard.className = 'crop-card bg-white p-4 rounded-lg shadow-md flex flex-col justify-between';
-                    cropCard.innerHTML = `
-                        <div>
-                            <h3 class="font-semibold text-lg text-gray-800">${item.crop}</h3>
-                            <p class="text-gray-600">Price: $${item.price.toFixed(2)}/kg</p>
-                            <p class="text-gray-600">Quantity: ${item.quantity}kg</p>
-                        </div>
-                        <button class="text-red-500 text-sm hover:underline mt-2" data-index="${index}">Remove</button>
-                    `;
-                    previewSection.appendChild(cropCard);
+        if (!crop || isNaN(price) || isNaN(quantity) || price <= 0 || quantity <= 0) {
+          showAlert("Please fill all fields with valid values!", "error");
+          return;
+        }
 
-                    cropCard.querySelector('button').addEventListener('click', () => {
-                        removeCrop(index);
-                    });
-                });
-            }
+        crops.push({ crop, price, quantity });
+        updatePreview();
+        clearForm();
+        showAlert("Crop added successfully!", "success");
+      });
 
-            // Remove Crop
-            function removeCrop(index) {
-                crops.splice(index, 1);
-                updatePreview();
-                showAlert('Crop removed!', 'success');
-            }
+      function updatePreview() {
+        previewSection.innerHTML = "";
+        crops.forEach((item, index) => {
+          const card = document.createElement("div");
+          card.className = "crop-card bg-white p-4 rounded-lg shadow-md";
+          card.innerHTML = `
+            <h3 class="font-bold text-lg">${item.crop}</h3>
+            <p class="text-sm text-gray-600">💲 $${item.price.toFixed(2)} / kg</p>
+            <p class="text-sm text-gray-600">📦 ${item.quantity} kg</p>
+            <button class="mt-2 text-red-500 text-sm underline" data-index="${index}">Remove</button>
+          `;
+          previewSection.appendChild(card);
 
-            // Clear Form
-            function clearForm() {
-                cropSelect.value = '';
-                priceInput.value = '';
-                quantityInput.value = '';
-            }
-
-            // Publish Marketplace
-            publishBtn.addEventListener('click', () => {
-                const storeName = storeNameInput.value.trim();
-                if (!storeName) {
-                    showAlert('Please enter a marketplace name!', 'error');
-                    return;
-                }
-                if (crops.length === 0) {
-                    showAlert('Please add at least one crop!', 'error');
-                    return;
-                }
-
-                const storeData = { storeName, crops };
-                console.log('Published Data:', storeData); // For debugging
-
-                const shareableLink = `${window.location.origin}/store/${encodeURIComponent(storeName)}`;
-                linkInput.value = shareableLink;
-                shareLinkSection.classList.remove('hidden');
-                showAlert('Marketplace published successfully!', 'success');
-            });
-
-            // Copy Link
-            copyLinkBtn.addEventListener('click', () => {
-                linkInput.select();
-                document.execCommand('copy');
-                showAlert('Link copied to clipboard!', 'success');
-            });
-
-            // Alert/Toast
-            function showAlert(message, type) {
-                const alert = document.createElement('div');
-                alert.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white ${
-                    type === 'success' ? 'bg-green-500' : 'bg-red-500'
-                }`;
-                alert.textContent = message;
-                document.body.appendChild(alert);
-                setTimeout(() => alert.remove(), 3000);
-            }
+          card.querySelector('button').addEventListener('click', () => {
+            crops.splice(index, 1);
+            updatePreview();
+            showAlert("Crop removed!", "success");
+          });
         });
-    </script>
+      }
+
+      // Publish Marketplace
+      publishBtn.addEventListener('click', async () => {
+        const storeName = storeNameInput.value.trim();
+        if (!storeName) {
+          showAlert('Please enter a marketplace name!', 'error');
+          return;
+        }
+        if (crops.length === 0) {
+          showAlert('Please add at least one crop!', 'error');
+          return;
+        }
+
+        const storeData = { storeName, crops };
+        await fetch("/marketplace/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(storeData)
+        });
+
+        const shareableLink = `${window.location.origin}/marketplace/view/${storeName.toLowerCase()}`;
+        linkInput.value = shareableLink;
+        shareLinkSection.classList.remove('hidden');
+        showAlert('Marketplace published successfully!', 'success');
+      });
+
+      // Copy Link
+      copyLinkBtn.addEventListener('click', () => {
+        linkInput.select();
+        document.execCommand("copy");
+        showAlert("🔗 Link copied to clipboard!", "success");
+      });
+
+      // View Buyers
+      viewBuyersBtn.addEventListener("click", async () => {
+        const storeName = storeNameInput.value.trim().toLowerCase();
+        if (!storeName) {
+          alert("Enter your store name to view buyers.");
+          return;
+        }
+
+        const res = await fetch(`/marketplace/orders/${storeName}`);
+        const orders = await res.json();
+
+        if (!orders.length) {
+          alert("No buyers yet.");
+          return;
+        }
+
+        const popup = document.createElement("div");
+        popup.className = "fixed top-10 right-10 bg-white p-6 border rounded-xl shadow-xl z-50 max-w-md";
+        popup.innerHTML = `
+          <h3 class="text-lg font-bold mb-2 text-green-700">📋 Buyers List</h3>
+          <button class="absolute top-2 right-2 text-red-500 font-bold text-sm" onclick="this.parentElement.remove()">✖</button>
+          <div class="max-h-80 overflow-y-auto text-sm space-y-3">
+            ${orders.map(o => `
+              <div class="bg-green-50 border p-2 rounded shadow">
+                🧑‍🌾 <strong>${o.buyer}</strong><br>
+                🌾 ${o.crop} – ${o.quantity}kg @ $${o.price}/kg<br>
+                💰 Total: $${o.total} <br>
+                🕒 ${o.timestamp}
+              </div>
+            `).join("")}
+          </div>
+        `;
+        document.body.appendChild(popup);
+      });
+
+      function clearForm() {
+        cropSelect.value = '';
+        priceInput.value = '';
+        quantityInput.value = '';
+      }
+
+      function showAlert(msg, type) {
+        const toast = document.createElement("div");
+        toast.className = `fixed top-5 right-5 px-4 py-2 rounded shadow-lg text-white ${
+          type === 'success' ? 'bg-green-500' : 'bg-red-500'
+        }`;
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+      }
+    });
+  </script>
 </body>
 </html>
