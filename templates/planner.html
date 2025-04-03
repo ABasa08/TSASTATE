@@ -17,18 +17,79 @@
     <style>
       .hover-zoom { transition: transform 0.3s ease; }
       .hover-zoom:hover { transform: scale(1.05); }
-      .feature-card { transition: all 0.3s ease; border-bottom: 3px solid transparent; }
-      .feature-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); border-bottom: 3px solid #16a34a; }
-      .nav-link { position: relative; padding: 0.5rem 0; margin: 0 1rem; color: #374151; text-decoration: none; transition: color 0.3s ease; }
-      .nav-link:after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 0; background-color: #16a34a; transition: width 0.3s ease; }
-      .nav-link:hover { color: #16a34a; }
-      .nav-link:hover:after { width: 100%; }
-      .active-nav { color: #16a34a; font-weight: 600; }
-      .active-nav:after { width: 100%; }
-      #farm3d-container { display: flex; align-items: flex-start; gap: 20px; }
-      #farm3d-container .canvas-wrapper { flex: 1; }
-      #farm3d-container .ui-controls { flex: 0 0 auto; }
+    
+      .feature-card {
+        transition: all 0.3s ease;
+        border-bottom: 3px solid transparent;
+      }
+    
+      .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        border-bottom: 3px solid #16a34a;
+      }
+    
+      .nav-link {
+        position: relative;
+        padding: 0.5rem 0;
+        margin: 0 1rem;
+        color: #374151;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+    
+      .nav-link:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: #16a34a;
+        transition: width 0.3s ease;
+      }
+    
+      .nav-link:hover {
+        color: #16a34a;
+      }
+    
+      .nav-link:hover:after {
+        width: 100%;
+      }
+    
+      .active-nav {
+        color: #16a34a;
+        font-weight: 600;
+      }
+    
+      .active-nav:after {
+        width: 100%;
+      }
+    
+      /* ✅ Fixed layout for 3D + buttons */
+      #farm3d-container {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 30px;
+        margin-top: 2rem;
+      }
+    
+      #farm3d-container .canvas-wrapper {
+        flex: 1;
+        min-width: 75%;
+      }
+    
+      #farm3d-container .ui-controls {
+        min-width: 180px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 40px; /* aligns vertically */
+        padding-right: 10px;
+      }
     </style>
+    
   </head>
   <body class="bg-gradient-to-br from-green-50 to-yellow-50 font-sans text-gray-800">
     <!-- Navbar -->
@@ -36,7 +97,7 @@
       <div class="container mx-auto flex justify-between items-center py-4 px-6">
         <a href="/" class="flex items-center gap-2 no-underline">
           <lord-icon src="https://cdn.lordicon.com/yhwigfdf.json" trigger="hover" colors="primary:#16a34a" style="width:38px;height:38px"></lord-icon>
-          <h1 class="text-2xl font-bold text-green-700 m-0">🌿 TSA</h1>
+          <h1 class="text-2xl font-bold text-green-700 m-0">🌿 AgriFarm</h1>
         </a>
         <ul class="flex gap-4 font-medium text-sm">
           <li><a href="/" class="nav-link">Home</a></li>
@@ -167,7 +228,7 @@
         <div class="flex flex-col md:flex-row justify-between items-center">
           <div class="flex items-center gap-2 mb-4 md:mb-0">
             <lord-icon src="https://cdn.lordicon.com/yhwigfdf.json" trigger="hover" colors="primary:#16a34a" style="width:32px;height:32px"></lord-icon>
-            <span class="text-xl font-bold text-green-700">TSA</span>
+            <span class="text-xl font-bold text-green-700">AgriFarm</span>
           </div>
           <div class="flex gap-6">
             <a href="#" class="text-gray-500 hover:text-green-600 transition-colors"><i class="fab fa-facebook"></i></a>
@@ -176,7 +237,7 @@
             <a href="#" class="text-gray-500 hover:text-green-600 transition-colors"><i class="fab fa-youtube"></i></a>
           </div>
           <div class="text-sm text-gray-600 mt-4 md:mt-0">
-            TSA © 2025 • All Rights Reserved
+            AgriFarm © 2025 • All Rights Reserved
           </div>
         </div>
       </div>

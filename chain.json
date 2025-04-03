@@ -1,131 +1,34 @@
 [
   {
     "index": 0,
-    "timestamp": 1743656830.9712698,
+    "timestamp": 1743699708.793519,
     "feature": "Genesis",
     "data": "Initial block",
     "prev_hash": "0",
-    "hash": "1bbb24b7082669a144754bbad571c0eb321ef37e36bbc989751b41a24c09399f"
+    "hash": "327a649173f84150e7d0d3bafb4bc0a2b892268a8cb16811d8a619360e0b0261"
   },
   {
     "index": 1,
-    "timestamp": 1743656914.558951,
+    "timestamp": 1743699726.810239,
     "feature": "Crop Planner",
     "data": {
       "input": {
-        "crop": "Sugarcane",
-        "soil": "Silty",
-        "area": "20",
+        "crop": "Carrot",
+        "soil": "Chalky",
+        "area": "2",
         "yield": 1,
         "date": "2025-04-02T07:00:00.000Z"
       },
       "output": {
         "yield": "1.1 tons",
         "companions": [
-          "Marigold",
-          "Spinach"
+          "Lettuce",
+          "Tomato"
         ],
-        "tip": "Ensure good drainage and sunlight."
+        "tip": "Thin seedlings to allow root expansion."
       }
     },
-    "prev_hash": "1bbb24b7082669a144754bbad571c0eb321ef37e36bbc989751b41a24c09399f",
-    "hash": "9b8ea187488b8e384e45e28eb8a6d13a3940db091d644bcc24c5e833af353ad8"
-  },
-  {
-    "index": 2,
-    "timestamp": 1743656949.676194,
-    "feature": "Water Simulation",
-    "data": {
-      "input": {
-        "irrigation": "Flood",
-        "soil": "Sandy",
-        "crop": "Lettuce",
-        "area": 26,
-        "unit": "acres",
-        "location": "Seattle"
-      },
-      "output": {
-        "used_liters": 3867.5,
-        "used_gallons": 1021.7,
-        "saved_liters": 2632.5,
-        "saved_gallons": 695.4,
-        "score": 40.5,
-        "badge": "\ud83d\udfe5 Poor",
-        "weather": {
-          "temp": 7.32,
-          "humidity": 86,
-          "desc": "Light Rain",
-          "rain": true
-        },
-        "alerts": [
-          "\ud83c\udf27\ufe0f Rain expected in next 24hr \u2013 reduce irrigation.",
-          "\ud83d\udca7 High humidity \u2013 reduce water slightly."
-        ],
-        "tip": "\u26a0\ufe0f To improve your Lettuce yield:\n\u2022 Switch irrigation to Drip\n\u2022 Use Loamy soil for better root absorption",
-        "eco_tip": "\ud83d\udca7 Rain expected \u2013 save water:\n\u2022 Set up rain barrels\n\u2022 Skip tomorrow\u2019s irrigation schedule",
-        "rainAlert": true,
-        "match": "Poor"
-      }
-    },
-    "prev_hash": "9b8ea187488b8e384e45e28eb8a6d13a3940db091d644bcc24c5e833af353ad8",
-    "hash": "e07da37c99d2e268967fe2e0d5b09f15ed0f03a4c9ba4143f97fac5a66674923"
-  },
-  {
-    "index": 3,
-    "timestamp": 1743656955.175413,
-    "feature": "Water Simulation",
-    "data": {
-      "input": {
-        "irrigation": "Drip",
-        "soil": "Loamy",
-        "crop": "Lettuce",
-        "area": 26,
-        "unit": "acres",
-        "location": "Seattle"
-      },
-      "output": {
-        "used_liters": 2320.5,
-        "used_gallons": 613.0,
-        "saved_liters": 4179.5,
-        "saved_gallons": 1104.1,
-        "score": 64.3,
-        "badge": "\ud83d\udfe8 Moderate",
-        "weather": {
-          "temp": 7.32,
-          "humidity": 86,
-          "desc": "Light Rain",
-          "rain": true
-        },
-        "alerts": [
-          "\ud83c\udf27\ufe0f Rain expected in next 24hr \u2013 reduce irrigation.",
-          "\ud83d\udca7 High humidity \u2013 reduce water slightly."
-        ],
-        "tip": "\u2705 Your setup is optimized for Lettuce.\n\u2022 Drip irrigation supports water efficiency\n\u2022 Loamy soil enhances nutrient retention for better yield",
-        "eco_tip": "\ud83d\udca7 Rain expected \u2013 save water:\n\u2022 Set up rain barrels\n\u2022 Skip tomorrow\u2019s irrigation schedule",
-        "rainAlert": true,
-        "match": "Excellent"
-      }
-    },
-    "prev_hash": "e07da37c99d2e268967fe2e0d5b09f15ed0f03a4c9ba4143f97fac5a66674923",
-    "hash": "77dddb9ffff0cf6748452ebbd4de9e3c8e5ca1d27cbdf6c214f65d1b11f630fd"
-  },
-  {
-    "index": 4,
-    "timestamp": 1743656955.228949,
-    "feature": "FixSuggestion",
-    "data": {
-      "input": {
-        "crop": "Lettuce",
-        "area": 26,
-        "location": "Seattle"
-      },
-      "suggested": {
-        "irrigation": "Drip",
-        "soil": "Loamy"
-      },
-      "timestamp": 1743656955.2289448
-    },
-    "prev_hash": "77dddb9ffff0cf6748452ebbd4de9e3c8e5ca1d27cbdf6c214f65d1b11f630fd",
-    "hash": "f0339f1ed08d81091d0c96126950fb6fc0ba96b1b49fdf3fcc31668193d3f4d9"
+    "prev_hash": "327a649173f84150e7d0d3bafb4bc0a2b892268a8cb16811d8a619360e0b0261",
+    "hash": "b421f8c4e3945a1f3a6d810267e18b4853a6ee60a59f70ce500becae5dadeac9"
   }
 ]

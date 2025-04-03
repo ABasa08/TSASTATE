@@ -217,7 +217,7 @@ def water_logs():
 def export_water_pdf():
     data = request.json
     html = f"""
-    <h2>TSA – Water Simulation Report</h2>
+    <h2>AgriFarm – Water Simulation Report</h2>
     <p><b>Crop:</b> {data['crop']}</p>
     <p><b>Soil:</b> {data['soil']}</p>
     <p><b>Irrigation:</b> {data['irrigation']}</p>
@@ -370,7 +370,7 @@ def buy_crop():
 
     # Return dummy receipt
     receipt_html = f"""
-    <h1>TSA Order Receipt</h1>
+    <h1>AgriFarm Order Receipt</h1>
     <p><strong>Buyer:</strong> {buyer}</p>
     <p><strong>Crop:</strong> {crop}</p>
     <p><strong>Quantity:</strong> {qty}kg</p>
@@ -389,7 +389,7 @@ def buy_crop():
 def generate_receipt():
     data = request.json
     html = f"""
-    <h1 style='color: green;'>TSA Marketplace Receipt</h1>
+    <h1 style='color: green;'>AgriFarm Marketplace Receipt</h1>
     <p><strong>Buyer:</strong> {data['buyer']}</p>
     <p><strong>Crop:</strong> {data['crop']}</p>
     <p><strong>Quantity:</strong> {data['qty']} kg</p>
